@@ -22,6 +22,7 @@
     "@ctrl/ngx-codemirror": "^2.2.1",
     "@ngstack/code-editor": "^2.1.0",
     "@popperjs/core": "^2.4.4",
+    "angular-cli-ghpages": "^0.6.2",
     "bootstrap": "^4.5.2",
     "codemirror": "^5.57.0",
     "jquery": "^3.5.1",

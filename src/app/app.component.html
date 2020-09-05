@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  <title>Document</title>
+  
+ </head>
+ <body>
+ 
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <a class="navbar-brand" href="#">Menu</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Abrir
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#" > Archivo #1</a>
+            <a class="dropdown-item" href="#"><input type="file" id="file-input" /></a>               
+            <a class="dropdown-item" href="#" onclick="AbrirArchivo1()"> Abrir</a>
+            <div class="dropdown-divider"></div>         
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Ver
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">                      
+            <a class="dropdown-item" href="#" onclick= "GenerarAST()">AST</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Guardar Como
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">                      
+            <a class="dropdown-item" href="#" onclick="GuardarArchivo1()">Archivo #1</a>
+            <div class="dropdown-divider"></div>  
+            <a class="dropdown-item" href="#" onclick="GuardarArchivo2()">Archivo #2</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Descargar
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">                      
+              <a class="dropdown-item" href="#" onclick="GuardarArbol1()">AST</a>
+              <div class="dropdown-divider"></div>  
+              <a class="dropdown-item" href="#" onclick="GuardarErrores()">Errores</a>
+            </div>
+          </li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <div class="form-group shadow-textarea">
+    <label for="lblArchivo1">Archivo de Entrada</label>
+    <ngs-code-editor
+    id="consola1"
+    [theme]="theme"
+    [codeModel]="model"
+    [options]="options"
+    (valueChanged)="onCodeChanged($event)"
+  >
+  </ngs-code-editor>
+
+  </div>
+
+  <div class = "form-group botones">
+    <button type="button" class="btn btn-secondary" (click)="obtenerTexto()">analizar</button>
+  </div>
+
+  <div class = "form-group botones2">
+    <button type="button" class="btn btn-secondary" >Traducir</button>
+  </div>
+
+  <div class = "form-group botones3">
+    <button type="button" class="btn btn-secondary" >Ejecutar</button>
+  </div>
+
+  <div class="form-group shadow-textarea2">
+    <label for="lblArchivo2">Salida</label>
+    <ngs-code-editor
+    id="consola2"
+    [theme]="theme"
+    [codeModel]="model"
+    [options]="options"
+    (valueChanged)="onCodeChanged($event)"
+  >
+  </ngs-code-editor>
+
+  </div>
+
+ 
+
+
+</body>
+</html>

@@ -12,12 +12,7 @@ export class AppComponent {
   title = 'proyecto1';
   theme = 'vs-dark';
 
-  codeModel: CodeModel = {
-    language: 'typescript',
-    uri: 'main.ts',
-    value: '',
-    dependencies: ['@types/node', '@ngstack/translate', '@ngstack/code-editor'],
-  };
+ 
 
   options = {
     contextmenu: true,

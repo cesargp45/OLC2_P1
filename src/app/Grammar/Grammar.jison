@@ -140,7 +140,6 @@ stringliteralc (\'[^']*\')
 
 INICIO    
     : EOF{
-
     }
     |
     Instructions EOF { 
@@ -364,43 +363,12 @@ Declaration
     {
         $$ = new Declaration($2, null, @1.first_line, @1.first_column,null,1);
     }
-     | ID '=' Expr ';'
-    {   
-        $$ = new Asignation($1, $3, @1.first_line, @1.first_column,1);
-        console.log($$);
-    } 
+     
     
 ;
 
 
-/*DeclarationArray 
-    :
-    'LET' ID  ':' Tipo '['']' ';'
-    {
-        $$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,2);
-    }
-    |'LET' ID  ':' Tipo '['']' '=''[' ListaValores ']'';'
-    {
-        $$ = new DeclarationArray($2, $9, @1.first_line, @1.first_column,$4,2);
-    }
-    |'LET' ID  ':' Tipo '['']' '=''[' ']'';'
-    {
-        $$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,2);
-    }
-    |'CONST' ID ':' Tipo '['']' ';'
-    {
-        $$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,1);
-    }
-    |'CONST' ID  ':' Tipo '['']' '=''[' ListaValores']'';'
-    {
-        $$ = new DeclarationArray($2, $9, @1.first_line, @1.first_column,$4,1);
-    }
-    |'CONST' ID  ':' Tipo '['']' '=''[' ']'';'
-    {
-        $$ = new DeclarationArray($2,null, @1.first_line, @1.first_column,$4,1);
-    }   
-;
-*/
+
 
 DeclarationArray 
     :
@@ -442,6 +410,11 @@ Asignation
     { 
         
         $$ = new AsignationArray($1, null,$3, $6, @1.first_line, @1.first_column,3);
+    } 
+    | ID '=' Expr ';'
+    {   
+        $$ = new Asignation($1, $3, @1.first_line, @1.first_column,1);
+        console.log($$);
     } 
    
     | ID '++' ';'

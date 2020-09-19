@@ -1,0 +1,110 @@
+let a = 16;
+let b = 0;
+
+switch (a){
+    case 15:
+     console.log (15);
+     break;
+
+    case 16:
+     console.log (16);
+      while(b<5){
+         console.log(b);
+           if(b<4){
+               if(b ==3){
+                   break;
+               }
+           }
+         b++;
+      }
+     break;
+
+
+    case 17:
+     console.log (17);
+     break;
+
+
+    case 18:
+     console.log (18);
+     break;
+
+
+    case 19:
+     console.log (19);
+      break;
+
+     case 20:
+     console.log (20);    
+      break;
+}
+
+
+
+
+
+// probado
+
+let a = 0;
+let b = 0;
+let c = 17;
+
+while(a< 5){
+
+    switch (c){
+    case 15:
+     console.log (15);
+     break;
+
+    case 16:
+     console.log (16);
+      while(b<5){
+         console.log(b);
+           if(b<4){
+               if(b ==3){
+                   break;
+               }
+           }
+         b++;
+      }
+     break;
+
+
+    case 17:
+      console.log (17);
+      
+     break;
+
+
+    case 18:
+     console.log (18);
+     break;
+
+
+    case 19:
+     console.log (19);
+      break;
+
+     case 20:
+     console.log (20);    
+      break;
+}
+  a++;
+
+}
+
+
+let a  = 0;
+
+while (a < 5){
+  console.log (a);
+  break;
+  a++;
+}
+if (a<20){
+   console.log("entra");
+   break;
+   console.log("pasa el brake fresh");
+}
+
+ console.log("pasa afuera y sigue");

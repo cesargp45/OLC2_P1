@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
-import { CodeEditorModule } from '@ngstack/code-editor';
+import { CodeEditorModule ,CodeEditorService} from '@ngstack/code-editor';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,9 @@ import { CodeEditorModule } from '@ngstack/code-editor';
   ],
   imports: [
     BrowserModule,
-    CodeEditorModule.forRoot()
+    CodeEditorModule.forRoot({
+      typingsWorkerUrl: 'assets/workers/typings-worker.js'
+    })
    
   ],
   providers: [],

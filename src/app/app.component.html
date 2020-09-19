@@ -62,44 +62,49 @@
     </div>
   </nav>
 
+  
 
   <div class="form-group shadow-textarea">
     <label for="lblArchivo1">Archivo de Entrada</label>
     <ngs-code-editor
+    [codeModel]="model"
     id="consola1"
     [theme]="theme"
-    [options]="options"
-    (valueChanged)="onCodeChanged($event)"
+    [options]="options" 
+    (valueChanged)="onCodeChanged1($event)" 
+    
   >
   </ngs-code-editor>
+
+ 
+  
 
   </div>
 
   <div class = "form-group botones">
-    <button type="button" class="btn btn-secondary" (click)="obtenerTexto()">analizar</button>
+    <button type="button" class="btn btn-secondary" (click)="imprimir()">analizar</button>
   </div>
 
   <div class = "form-group botones2">
-    <button type="button" class="btn btn-secondary" >Traducir</button>
+    <button type="button" class="btn btn-secondary" (click)="imprimir2()" >Traducir</button>
   </div>
 
   <div class = "form-group botones3">
-    <button type="button" class="btn btn-secondary" >Ejecutar</button>
+    <button type="button" class="btn btn-secondary"  (click)="ejecutar()" >Ejecutar</button>
   </div>
 
   <div class="form-group shadow-textarea2">
     <label for="lblArchivo2">Salida</label>
     <ngs-code-editor
+    [codeModel]="model"
     id="consola2"
     [theme]="theme"
     [options]="options"
-    (valueChanged)="onCodeChanged($event)"
+    (valueChanged)="onCodeChanged2($event)" 
   >
   </ngs-code-editor>
 
   </div>
-
- 
 
 
 </body>

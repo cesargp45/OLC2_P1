@@ -29,7 +29,7 @@ export class Asignation extends Instruction{
             throw {error: "Semantico: la variable no existe, o se encuentra en otro entorno", linea: this.line, columna : this.column}
         } 
         
-        if(this.value ! = null){
+        if(this.value != null){
 
          const vall = this.value.execute(environment);
 
@@ -39,7 +39,7 @@ export class Asignation extends Instruction{
             throw {error: "Semantico: no se puede asignar un valor undefined", linea: this.line, columna : this.column};
           }
 
-         }else{
+         }else if( this.tipo == 1){
             let errorN = new Error_(this.line,this.column,"Semantico","valor nulo");
             errores.push(errorN);  
             throw {error: "Semantico: valor nulo", linea: this.line, columna : this.column};
@@ -59,7 +59,7 @@ export class Asignation extends Instruction{
                         let igual;
                         if (this.value != null) {
                             for (const c of val.value) {
-                                let valor = c.execute(env);
+                                let valor = c.execute(environment);
                                // console.log(valor);
                                 if (valor.type != v.typeArray) {
                                      if(v.typeArray != null ){
@@ -83,7 +83,7 @@ export class Asignation extends Instruction{
                             }
                              
                             for (const a of val.value) {
-                                let valor = a.execute(env);
+                                let valor = a.execute(environment);
                                 arreglo.push(valor.value);
                                 igual = valor.type;
                             }
@@ -148,7 +148,7 @@ export class Asignation extends Instruction{
              }
 
         }
-
+         
 
         
     }

@@ -73,7 +73,7 @@ export class Declaration extends Instruction{
         if (this.tipo == null && this.value == null){  // let id;
            
             if(this.tipoAsig == 2){
-                environment.guardar(this.id, null, Type.ANY,"let",null,null);
+                environment.guardarN(this.id, null, Type.ANY,"let",null,null);
             }else{
                 let errorN = new Error_(this.line,this.column,"Semantico","La variable const debe estar inicializado");
                 errores.push(errorN);  
@@ -84,16 +84,16 @@ export class Declaration extends Instruction{
            
             const val = this.value.execute(environment);
             if(this.tipoAsig == 1){
-                environment.guardar(this.id, val.value, val.type,"const",null,null);
+                environment.guardarN(this.id, val.value, val.type,"const",null,null);
             }else{
-                environment.guardar(this.id, val.value, val.type,"let",null,null);
+                environment.guardarN(this.id, val.value, val.type,"let",null,null);
             }
             
 
         }else if(this.value == null && this.tipo != null){// let id:tipo;
              
             if(this.tipoAsig == 2){
-                environment.guardar(this.id, null, t,"let",null,null);
+                environment.guardarN(this.id, null, t,"let",null,null);
             }else{
                 let errorN = new Error_(this.line,this.column,"Semantico","La variable const debe estar inicializado");
                 errores.push(errorN);  
@@ -105,9 +105,9 @@ export class Declaration extends Instruction{
             const val = this.value.execute(environment);
             if(t == Type.ANY || val.type == t){
                 if(this.tipoAsig == 1){
-                    environment.guardar(this.id, val.value, val.type,"const",null,null);
+                    environment.guardarN(this.id, val.value, val.type,"const",null,null);
                 }else{
-                    environment.guardar(this.id, val.value, val.type,"let",null,null);
+                    environment.guardarN(this.id, val.value, val.type,"let",null,null);
                 }
                 
             }else{

@@ -44,7 +44,8 @@ export class Switch extends Instruction{
                //console.log(element);
                if(element.type == 'Break'){
                    return;  
-                  } else if(element.type == 'Return'){
+                  } 
+                  else if(element.type == 'Return'){
                     return element;  
                  }             
                }
@@ -59,9 +60,10 @@ export class Switch extends Instruction{
                 //console.log(element);
                 if(element.type == 'Break'){
                     return; 
-                }else if(element.type == 'Return'){
+                }
+                else if(element.type == 'Return'){
                     return element;  
-                 }   
+                 } 
                                   
               }              
               bandera = true;

@@ -83,9 +83,53 @@ export class Call extends Instruction{
                               let errorN = new Error_(actual.line,actual.column,"Semantico","Continue fuera de ciclo");
                               errores.push(errorN);         
                               throw {error: "Semantico: Continue fuera de ciclo", linea: actual.line, columna : actual.column};
-                             }else if(actual.type == 'Return'){
-                                console.log("return "+ actual.value);
-                                break;
+                            
+                            }else if(actual.type == 'Return'){
+                                //console.log("return "+ actual.value);
+                            
+                      
+                                    if (actual.value != null) {
+                                        if (func.tipo != null) {
+                                            if (getTipo(func.tipo) == Type.VOID) {
+                                                // error porque void no retorna nada
+                                                let errorN = new Error_(this.line,this.column,"Semantico","Una Funcion void no retorna valores");
+                                                errores.push(errorN);  
+                                                throw {error: "Semantico: Una Funcion void no retorna valores", linea: this.line, columna : this.column};
+                                            } else {
+                                                if (getTipo(func.tipo) == actual.tipoDato) {
+                                                    return { value: actual.value, type: actual.tipoDato};
+                                                } else {
+                                                    //error retorna un tipo diferente
+                                                    let errorN = new Error_(this.line,this.column,"Semantico","El tipo del valor que se retorna no es igual al tipo de la funcionn");
+                                                    errores.push(errorN);  
+                                                    throw {error: "Semantico: El tipo del valor que se retorna no es igual al tipo de la funcionn", linea: this.line, columna : this.column};
+                                                }
+                                            }
+            
+                                        } else {
+                                            //error, deberia retornar nulo
+                                            let errorN = new Error_(this.line,this.column,"Semantico","No debe de retornar valores");
+                                            errores.push(errorN);  
+                                            throw {error: "Semantico: No debe retornar valores", linea: this.line, columna : this.column};
+                                        }
+                                    } else {
+                                        if (func.tipo != null) {
+                                            if (getTipo(func.tipo) == Type.VOID) {
+                                                // solo se hace el return y ya
+                                                return;
+                                            } else{
+                                                 // error, no retorna nada y deberia retornar el tipo de la funcion
+                                                 let errorN = new Error_(this.line,this.column,"Semantico","Debe retornar un valor, y no retorna nada");
+                                                 errores.push(errorN);  
+                                                 throw {error: "Semantico: Debe retornar un valor, y no retorna nada", linea: this.line, columna : this.column};
+                                            }
+                                            
+                                        } else {
+                                            // solo hace el return y ya
+                                            return;
+                                        }
+                                    }
+                                
                             }
                              
                                                
@@ -97,6 +141,15 @@ export class Call extends Instruction{
                    console.log(error);
                 }
               }
+
+            if(func.tipo == null || getTipo(func.tipo) == Type.VOID){
+                return ;
+            }else{
+             let errorN = new Error_(this.line,this.column,"Semantico","Deberia de retornar un vvalor y no retorna ningun valor");
+             errores.push(errorN);  
+             throw {error: "Semantico: Deberia de retornar un vvalor y no retorna ningun valor", linea: this.line, columna : this.column};
+               
+            }
             
 
             }else{

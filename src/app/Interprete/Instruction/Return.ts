@@ -12,7 +12,7 @@ export class Return extends Instruction{
         if(this.value != null){
              let a = this.value.execute(environment);
 
-            return {line : this.line, column: this.column, type : 'Return' ,value: a.value};
+            return {line : this.line, column: this.column, type : 'Return' ,value: a.value , tipoDato: a.type};
         }else{
             return {line : this.line, column: this.column, type : 'Return' ,value:this.value};
         }

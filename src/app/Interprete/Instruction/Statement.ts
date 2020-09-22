@@ -13,16 +13,26 @@ export class Statement extends Instruction{
         for(const instr of this.code){
             try {
                 const element = instr.execute(newEnv);
-                if(element != undefined || element != null){             
-                    return element;                
+                if(element != undefined || element != null){  
+                    if(element.type == 'Return'){
+                        //console.log("retorna: " +element.value+" tipo: " + element.tipoDato);
+                        return element; 
+                    }else if(element.type == 'Break'){
+                        //console.log("retorna: " +element.value+" tipo: " + element.type);
+                        return element; 
+                    }else if(element.type == 'Continue'){
+                        //console.log("retorna: " +element.value+" tipo: " + element.type);
+                        return element; 
+                    }
+                                   
                 }
-
-
 
             } catch (error) {
                 errores.push(error);
             }
         }
+
+        
     }
 
    

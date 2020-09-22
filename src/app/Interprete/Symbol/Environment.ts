@@ -25,6 +25,13 @@ export class Environment{
         this.variables.set(id, new Symbol(valor, id, type,tipoVar,listaVal,typeArray));
     }
 
+    public guardarN(id: string, valor: any, type: Type,tipoVar:string,listaVal:Array<any>, typeArray: Type){
+     
+        this.variables.set(id, new Symbol(valor, id, type,tipoVar,listaVal,typeArray));
+    }
+
+
+
     public guardarFuncion(id: string, funcion : Function){
         //TODO ver si la funcion ya existe, reportar error
         this.funciones.set(id, funcion);
@@ -73,11 +80,12 @@ export class Environment{
 
     public imprimirLista(){
         
-              
+        console.log("inicio --- \n");  
         for (var [clave, valor] of this.variables) {
             console.log(clave + " = " + valor.valor +"\n");
           }
-          
+           
+          console.log("fin --- \n"); 
         
     }
 }

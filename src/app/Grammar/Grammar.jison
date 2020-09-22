@@ -8,8 +8,11 @@
   const {Relational, RelationalOption} = require('../Interprete/Expression/Relational');
   const {Access} = require('../Interprete/Expression/Access');
   const {Literal} = require('../Interprete/Expression/Literal');
+  const {AccesoArray} = require('../Interprete/Expression/AccesoArray');
   const {Declaration} = require('../Interprete/Instruction/Declaration');
   const {DeclarationArray} = require('../Interprete/Instruction/DeclarationArray');
+   const {DeclarationArray2} = require('../Interprete/Instruction/DeclarationArray2');
+   const {DecArray} = require('../Interprete/Instruction/DecArray');
   const {Logic,LogicOption} = require('../Interprete/Expression/Logic');
   const {Function} = require('../Interprete/Instruction/Function');
   const {Asignation} = require('../Interprete/Instruction/Asignation');
@@ -29,6 +32,8 @@
   const {Break} = require('../Interprete/Instruction/Break');
   const {Call} = require('../Interprete/Instruction/Call');
   const {Return} = require('../Interprete/Instruction/Return');
+  const {Prueba} = require('../Interprete/Instruction/Prueba');
+  const {CadenaParam} = require('../Interprete/Instruction/CadenaParam');
 	 
 %}
 
@@ -36,11 +41,13 @@
 %lex
 // case-sensitive --> para que acepte mayusculas y minusculas
 %options case-sensitive  
-
+//`Mover disco de ${origen} a ${destino}`
 entero [0-9]+
 decimal {entero}("."{entero})?
 stringliteral (\"[^"]*\")
 stringliteralc (\'[^']*\')
+stringliteralb (\`[^`]*\`)
+
 
 %%
 
@@ -53,7 +60,8 @@ stringliteralc (\'[^']*\')
 {entero}                return 'ENTERO'
 {decimal}               return 'DECIMAL'
 {stringliteral}         return 'CADENA'
-{stringliteralc}        return 'CADENA'
+{stringliteralc}        return 'CADENAB'
+{stringliteralb}        return 'CADENAPARAM'
 "string"			    return 'STRING'
 "boolean"			    return 'BOOLEAN'
 "number"			    return 'NUMBER'
@@ -96,9 +104,9 @@ stringliteralc (\'[^']*\')
 "?"						return '?'
 "=="					return '=='
 ">="					return '>='
+"<="					return '<='
 "!="					return '!='
 "<"						return '<'
-"<="					return '<='
 ">"						return '>'
 "&&"					return '&&'
 "||"					return '||'
@@ -230,7 +238,7 @@ PrintSt
     : 'PRINT' '(' Expr ')' ';' {
         
         $$ = new Print($3, @1.first_line, @1.first_column);
-        //agregar imprimir 
+        
     }
 ;
 
@@ -372,41 +380,66 @@ Declaration
 
 DeclarationArray 
     :
-    'LET' ID  ':' Tipo '['']' ';'
+    'LET' ID  ':' Tipo ListaLlaves  ';'
     {
-        $$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,2);
+        $$ = new DeclarationArray2($2, null, @1.first_line, @1.first_column,$4,2,$5);
+        //$$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,2,$5);
     }
-    |'LET' ID  ':' Tipo '['']' '=' Expr';'
+    |'LET' ID  ':' Tipo ListaLlaves  '=' Expr ';'
     {
-        $$ = new DeclarationArray($2, $8, @1.first_line, @1.first_column,$4,2);
+        // $$ = new DeclarationArray($2, $8, @1.first_line, @1.first_column,$4,2,$5);
+         $$ = new DeclarationArray2($2, $7, @1.first_line, @1.first_column,$4,2,$5);
     }
-    |'LET' ID  ':' Tipo '['']' '=''[' ']'';'
+    /*|'LET' ID  ':' Tipo ListaLlaves  '=''[' ']'';'
     {
-        $$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,2);
+        //$$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,2,$5);
+        $$ = new DeclarationArray2($2, null, @1.first_line, @1.first_column,$4,2,$5);
+    }*/
+    |'CONST' ID ':' Tipo ListaLlaves  ';'
+    {
+        //$$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,1,$5);
+        $$ = new DeclarationArray2($2, null, @1.first_line, @1.first_column,$4,1,$5);
     }
-    |'CONST' ID ':' Tipo '['']' ';'
+    |'CONST' ID  ':' Tipo ListaLlaves  '=' Expr ';'
     {
-        $$ = new DeclarationArray($2, null, @1.first_line, @1.first_column,$4,1);
+        //$$ = new DeclarationArray($2, $8, @1.first_line, @1.first_column,$4,1,$5);
+        $$ = new DeclarationArray2($2, $7, @1.first_line, @1.first_column,$4,1,$5);
     }
-    |'CONST' ID  ':' Tipo '['']' '=' Expr ';'
+    /*|'CONST' ID  ':' Tipo ListaLlaves  '=''[' ']'';'
     {
-        $$ = new DeclarationArray($2, $8, @1.first_line, @1.first_column,$4,1);
-    }
-    |'CONST' ID  ':' Tipo '['']' '=''[' ']'';'
-    {
-        $$ = new DeclarationArray($2,null, @1.first_line, @1.first_column,$4,1);
-    }   
+       // $$ = new DeclarationArray($2,null, @1.first_line, @1.first_column,$4,1);
+        $$ = new DeclarationArray2($2,null, @1.first_line, @1.first_column,$4,1);
+    }*/  
 ;
     
   
+  ListaLlaves 
+    : ListaLlaves '['']'{
+        $1.push($2);
+        $$ = $1;
+    }
+    | '['']'{
+        $$ = [$1];
+    }
+; 
+
+ListaIndices
+    : ListaIndices '[' Expr']'{
+        $1.push($3);
+        $$ = $1;
+    }
+    | '['Expr']'{
+        $$ = [$2];
+    }
+; 
 
 
 Asignation
-    : ID '=' '['']' ';'
+    : /*ID '=' '['']' ';'
     {   
         $$ = new AsignationArray($1, null,null,null, @1.first_line, @1.first_column,1);
     } 
-    | ID '[' Expr ']' '=' Expr  ';'
+    |*/ ID '[' Expr ']' '=' Expr  ';'
     { 
         
         $$ = new AsignationArray($1, null,$3, $6, @1.first_line, @1.first_column,3);
@@ -414,9 +447,8 @@ Asignation
     | ID '=' Expr ';'
     {   
         $$ = new Asignation($1, $3, @1.first_line, @1.first_column,1);
-        console.log($$);
+        
     } 
-   
     | ID '++' ';'
     { 
         
@@ -428,9 +460,6 @@ Asignation
         $$ = new Asignation($1, null, @1.first_line, @1.first_column,3);
     }  
 ;
-
-
-
 
 
 
@@ -665,6 +694,26 @@ StatementSw
     }   
 ;
 
+ArrayDec
+  :'[' ListaExpr ']'{
+     $$ = new DecArray($2,@1.first_line, @1.first_column);
+  }
+  | '[' ']'{
+    $$ = new DecArray([],@1.first_line, @1.first_column);
+  }
+  ;
+
+  ArrayAcces
+  : ArrayAcces '['Expr']'{
+
+   $$ = new AccesoArray('',$3,$1,@1.first_line, @1.first_column);
+
+  }
+  | ID  '['Expr']'{
+
+    $$ = new AccesoArray($1,$3,null,@1.first_line, @1.first_column);
+  }
+;
 
 Expr
     : '-' Expr % UMENOS
@@ -740,6 +789,9 @@ Expr
         $$ = $1;
     }
 ;
+  
+  
+
 
 
 F
@@ -747,9 +799,10 @@ F
     { 
         $$ = $2;
     }
-    |'[' ListaExpr ']'
+    |ArrayDec
     { 
-        $$ = new Literal($2, @1.first_line, @1.first_column, 5);
+        //$$ = new Literal($2, @1.first_line, @1.first_column, 5);
+        $$ = $1;
     }
     | DECIMAL
     { 
@@ -758,11 +811,19 @@ F
     | ENTERO
     { 
         $$ = new Literal($1, @1.first_line, @1.first_column, 1);
-        console.log($1);
+        
     }
     | CADENA
     {
         $$ = new Literal($1.replace(/\"/g,""), @1.first_line, @1.first_column, 2);
+    }
+    | CADENAB
+    {
+        $$ = new Literal($1.replace(/\'/g,""), @1.first_line, @1.first_column, 2);
+    }
+    | CADENAPARAM
+    {
+        $$ = new CadenaParam($1.replace(/\`/g,""), @1.first_line, @1.first_column);
     }
     | TRUE
     {
@@ -776,10 +837,10 @@ F
     {
         $$ = new Literal($1, @1.first_line, @1.first_column, 4);
     }
-    | ID '['Expr']'
+   /* | ID ListaIndices
     {
         $$ = new Access($1,$3, @1.first_line, @1.first_column,1);
-    }
+    }*/
     |
      ID 'LENGTH' 
     {
@@ -791,6 +852,9 @@ F
     }
     |Call{
         $$ = $1;
+    }
+    |ArrayAcces{
+        $$ =$1;
     }
     
     

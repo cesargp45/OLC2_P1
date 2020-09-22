@@ -11,7 +11,15 @@ export class Literal extends Expression{
         if(this.type <= 1){
             return {value : Number(this.value), type : Type.NUMBER};
         }else if(this.type == 2){
-            return {value : this.value, type : Type.STRING};
+             let cadena = this.value;
+             console.log("valor inicial: "+cadena);
+              cadena = cadena.replace(/\\n/g,'\n'); 
+              cadena = cadena.replace(/\\t/g,'\t'); 
+              cadena = cadena.replace(/\\r/g,'\r'); 
+              //cadena = cadena.replace(/\\"/g,'\"');                                    
+              cadena = cadena.replace(/\\\\/g,'\\');
+
+            return {value : cadena, type : Type.STRING};
         }else if(this.type == 3){
             return {value : this.value, type : Type.BOOLEAN};
         }else if(this.type == 4){

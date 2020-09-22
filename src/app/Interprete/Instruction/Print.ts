@@ -1,6 +1,7 @@
 import { Instruction } from "../Abstract/Instruction";
 import { Expression } from "../Abstract/Expression";
 import { Environment } from "../Symbol/Environment";
+import { Type } from '../Abstract/Retorno';
 
 export class Print extends Instruction{
 
@@ -10,7 +11,13 @@ export class Print extends Instruction{
 
     public execute(environment : Environment) {
         const value = this.value.execute(environment);
+        if (value == null || value == undefined){
+            console.log("imprime null | undefined");
+        }else{
+            console.log( "salida: ");
+            console.log(value.value);
+        }
         
-        console.log(value);
+        
     }
 }

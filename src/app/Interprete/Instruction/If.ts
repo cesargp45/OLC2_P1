@@ -14,6 +14,7 @@ export class If extends Instruction{
     }
 
     public execute(env : Environment) {
+        
         const condition = this.condition.execute(env);
         if(condition.type != Type.BOOLEAN){
             

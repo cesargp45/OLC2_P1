@@ -3,8 +3,8 @@ import { Environment } from "../Symbol/Environment";
 import { Retorno } from "../Abstract/Retorno";
 //import { type } from "os";
 import { Type } from '../Abstract/Retorno';
-import {Error_} from "../Error"
-import {errores} from "../Errores"
+import {Error_} from "../Error";
+import {errores} from "../Errores";
 
 
 export class Access extends Expression{

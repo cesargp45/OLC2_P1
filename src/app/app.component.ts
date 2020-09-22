@@ -66,7 +66,7 @@ export class AppComponent implements OnInit  {
 
         // segunda pasada funciones
 
-        /*for (const instr of ast) {
+        for (const instr of ast) {
           try {
             if (instr instanceof Function) {
               //const instruccionE = instr.execute(env);
@@ -94,7 +94,7 @@ export class AppComponent implements OnInit  {
            console.log(error);
         }
       }
-*/
+
 
 
 
@@ -104,9 +104,9 @@ export class AppComponent implements OnInit  {
 
         for (const instr of ast) {
           try {
-             /* if(instr instanceof Function || instr instanceof Declaration || instr instanceof DeclarationArray){
+              if(instr instanceof Function || instr instanceof Declaration || instr instanceof DeclarationArray){
 
-              }else{*/
+              }else{
 
                 if (instr instanceof Instruction) {
                   
@@ -136,6 +136,7 @@ export class AppComponent implements OnInit  {
                 } else if (Array.isArray(instr)) {
                   for (const arr of instr) {
                     try {
+                      console.log("pasa por el arreglo");
                       arr.execute(env);
                     } catch (error) {
                       // ErrorTable.push(error);
@@ -144,7 +145,7 @@ export class AppComponent implements OnInit  {
                   }
                 }
 
-              //}
+              }
             
           } catch (error) {
             //ErrorTable.push(error);

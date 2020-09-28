@@ -2,6 +2,9 @@ import { env } from "process"
 import { Symbol } from "./Symbol";
 import { Type } from "../Abstract/Retorno";
 import { Function } from "../Instruction/Function";
+import { Simbolo } from "../simbolo";
+import { simbolog } from "../simboloG";
+import { simboloGlobal } from "../simboloGlobal";
 
 export class Environment{
     
@@ -83,9 +86,117 @@ export class Environment{
         console.log("inicio --- \n");  
         for (var [clave, valor] of this.variables) {
             console.log(clave + " = " + valor.valor +"\n");
-          }
+         }
            
           console.log("fin --- \n"); 
         
     }
+
+
+    public guardarSimbolos() : Symbol | undefined | null{
+        let env : Environment | null = this;
+        while(env != null){
+            for (var [clave, valor] of env.variables) {
+                //console.log(clave + " = " + valor.valor +"\n");
+                if(env.anterior == null){
+                 let simboloN = new Simbolo(clave, valor.tipoVar, "Global", valor.valor,this.getType(valor.type));
+                 simbolog.push(simboloN); 
+                }else{
+                    let simboloN = new Simbolo(clave, valor.tipoVar, "Local", valor.valor,this.getType(valor.type));
+                    simbolog.push(simboloN); 
+                }
+             } 
+            env = env.anterior;
+        }
+        return null;
+    }   
+   
+
+    public guardarsimbolosf() : Symbol | undefined | null{
+        let env : Environment | null = this;
+        while(env != null){
+            for (var [clave, valor] of env.funciones) {
+                //console.log(clave + " = " + valor.valor +"\n");
+                if(env.anterior == null){
+                 let simboloN = new Simbolo(clave,"", "Global", "",this.getType2(valor.tipo));
+                 simbolog.push(simboloN); 
+                }
+             } 
+            env = env.anterior;
+        }
+        return null;
+    } 
+
+    public guardarSimGlobal() {
+              
+          for (var [clave, valor] of this.variables) {
+                //console.log(clave + " = " + valor.valor +"\n");
+                if(this.anterior == null){
+                 let simboloN = new Simbolo(clave, valor.tipoVar, "Global", valor.valor,this.getType(valor.type));
+                 simbolog.push(simboloN); 
+                }else{
+                    let simboloN = new Simbolo(clave, valor.tipoVar, "Local", valor.valor,this.getType(valor.type));
+                    simboloGlobal.push(simboloN); 
+                }
+             } 
+                  
+     
+    }   
+   
+
+    public guardarFunGlobal() {
+        
+         if (this.anterior == null){
+            for (var [clave, valor] of this.funciones) {
+                //console.log(clave + " = " + valor.valor +"\n");
+                if(env.anterior == null){
+                 let simboloN = new Simbolo(clave,"", "Global", "",this.getType2(valor.tipo));
+                 simboloGlobal.push(simboloN); 
+                }
+             } 
+            
+        }
+        
+    } 
+
+    getType(val:any){
+        if(val == Type.NUMBER){
+           return "number";
+        }else if(val == Type.BOOLEAN){
+            return "boolean";
+        }else if(val == Type.STRING){
+            return "string";
+        }else if(val == Type.ANY){
+            return "any";
+        }else if(val == Type.VOID){
+            return "void";
+        }else if(val == Type.ARRAY){
+            return "array";
+        }
+        return "any";
+
+    }
+
+
+    getType2(val:any){
+        if(val == Type.NUMBER){
+           return "number";
+        }else if(val == Type.BOOLEAN){
+            return "boolean";
+        }else if(val == Type.STRING){
+            return "string";
+        }else if(val == Type.ANY){
+            return "any";
+        }else if(val == Type.VOID){
+            return "void";
+        }else if(val == Type.ARRAY){
+            return "array";
+        }
+        return "sin retorno";
+
+    }
+
+   
+
 }
+

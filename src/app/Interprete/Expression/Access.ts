@@ -13,9 +13,10 @@ export class Access extends Expression{
         super(line, column);
     }
 
-    public execute(environment: Environment): Retorno {
-       
+    public execute(environment: Environment) {
+         
         const value = environment.getVar(this.id);
+       
         if(value == null){
              let errorN = new Error_(this.line,this.column,"Semantico","La variable no existe");
              errores.push(errorN);         
@@ -24,12 +25,11 @@ export class Access extends Expression{
         
         if(this.indice == null){
             if(this.tipo == 1){
-                return {value : value.valor, type : value.type};
+                return {value : value.valor, type : value.type,typeArr:value.typeArray};
             }else{
              
-
              if(value.type == Type.ARRAY){
-                let n = value.valor;
+                let n = value.valor.atributos;
                 let tam = n.length;
                 
                 return {value : tam, type : Type.NUMBER};
@@ -42,32 +42,6 @@ export class Access extends Expression{
 
             }
             
-        }else{
-                let n = this.indice.execute(environment);
-            if(value.type == Type.ARRAY){
-                   if (n.type == Type.NUMBER){
-                        
-                     let valora = value.valor[n.value];
-                     if(valora == null || valora == undefined){
-                        let errorN = new Error_(this.line,this.column,"Semantico","el valor al que intenta acceder no esta definido");
-                        errores.push(errorN);         
-                        throw {error: "Semantico: el valor al que intenta acceder no esta definido", linea: this.line, columna : this.column};
-
-                     }else{
-                        return {value: valora, type : value.typeArray};
-                     }
-                     
-                   }else{
-                    let errorN = new Error_(this.line,this.column,"Semantico","El indice debe de ser de tipo number");
-                    errores.push(errorN);         
-                    throw {error: "Semantico: El indice debe de ser de tipo number", linea: this.line, columna : this.column};
-                   }
-
-            }else{
-                let errorN = new Error_(this.line,this.column,"Semantico","No se puede accesar a ese dato pues la variable no es un arreglo");
-                errores.push(errorN);         
-                throw {error: "Semantico:No se puede accesar a ese dato pues la variable no es un arreglo", linea: this.line, columna : this.column};
-            }
         }
         
     }

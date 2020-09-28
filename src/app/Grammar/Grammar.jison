@@ -11,12 +11,13 @@
   const {AccesoArray} = require('../Interprete/Expression/AccesoArray');
   const {Declaration} = require('../Interprete/Instruction/Declaration');
   const {DeclarationArray} = require('../Interprete/Instruction/DeclarationArray');
-   const {DeclarationArray2} = require('../Interprete/Instruction/DeclarationArray2');
-   const {DecArray} = require('../Interprete/Instruction/DecArray');
+  const {DeclarationArray2} = require('../Interprete/Instruction/DeclarationArray2');
+  const {DecArray} = require('../Interprete/Instruction/DecArray');
   const {Logic,LogicOption} = require('../Interprete/Expression/Logic');
   const {Function} = require('../Interprete/Instruction/Function');
   const {Asignation} = require('../Interprete/Instruction/Asignation');
-   const {AsignationArray} = require('../Interprete/Instruction/AsignationArray');
+  const {AsignationArray} = require('../Interprete/Instruction/AsignationArray');
+  const {AsignationArray2} = require('../Interprete/Instruction/AsignationArray2');
   const {If} = require('../Interprete/Instruction/If');
   const {While} = require('../Interprete/Instruction/While');
   const {doWhile} = require('../Interprete/Instruction/doWhile');
@@ -34,6 +35,10 @@
   const {Return} = require('../Interprete/Instruction/Return');
   const {Prueba} = require('../Interprete/Instruction/Prueba');
   const {CadenaParam} = require('../Interprete/Instruction/CadenaParam');
+  const {pruebaAsign} = require('../Interprete/Instruction/pruebaAsign');
+  const {ArrayLenght} = require('../Interprete/Expression/ArrayLenght');
+  const {registrarError} = require('../Interprete/Instruction/registrarError');
+  const {Graficar} = require('../Interprete/Instruction/graficar');
 	 
 %}
 
@@ -43,7 +48,7 @@
 %options case-sensitive  
 //`Mover disco de ${origen} a ${destino}`
 entero [0-9]+
-decimal {entero}("."{entero})?
+decimal {entero}"."{entero}
 stringliteral (\"[^"]*\")
 stringliteralc (\'[^']*\')
 stringliteralb (\`[^`]*\`)
@@ -56,9 +61,8 @@ stringliteralb (\`[^`]*\`)
 "//".*										// comentario simple línea
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]         // comentario multilinea 
 
-
-{entero}                return 'ENTERO'
 {decimal}               return 'DECIMAL'
+{entero}                return 'ENTERO'
 {stringliteral}         return 'CADENA'
 {stringliteralc}        return 'CADENAB'
 {stringliteralb}        return 'CADENAPARAM'
@@ -124,7 +128,11 @@ stringliteralb (\`[^`]*\`)
 ([a-zA-Z_])[a-zA-Z0-9_ñÑ]*     return 'ID';
 
 <<EOF>>	          return 'EOF'
-.					{ console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
+.					{ 
+                       console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);
+                       let e = new registrarError(yylloc.first_line, yylloc.first_column,yytext,null,1);
+                       e.execute();
+                    }
 
 /lex
 
@@ -170,9 +178,15 @@ Instructions
 
 
 Instruction
-    : error ';'{  console.error('Error Sintactico: ' + $1 + 'linea: ' + @1.first_line + ' columna: ' + @1.first_column+" se esperaba: " + yy.parser.hash.expected.join(",")); }
+    : error ';'{  console.error('Error Sintactico: ' + $1 + ' linea: ' + @1.first_line + ' columna: ' + @1.first_column+" se esperaba: " + yy.parser.hash.expected.join(",")); 
+                  let e = new registrarError(@1.first_line, @1.first_column,$1,yy.parser.hash.expected.join(","),2);
+                  e.execute();
+    }
     
-    | error '}'{  console.error('Error Sintactico: ' + $1 + 'linea: ' + @1.first_line + ' columna: ' + @1.first_column+" se esperaba: " + yy.parser.hash.expected.join(",")); }
+    | error '}'{  console.error('Error Sintactico: ' + $1 + ' linea: ' + @1.first_line + ' columna: ' + @1.first_column+" se esperaba: " + yy.parser.hash.expected.join(",")); 
+                  let e = new registrarError(@1.first_line, @1.first_column,$1,yy.parser.hash.expected.join(","),2);
+                  e.execute();
+    }
 
     | Declaration{
         $$ = $1;
@@ -181,6 +195,7 @@ Instruction
         $$ = $1;
     }
     | Asignation{
+         //console.log("entra a asignar");
         $$ = $1;
     }
     
@@ -210,7 +225,7 @@ Instruction
         $$ = new Break(@1.first_line, @1.first_column);
     }
     | 'CONTINUE' ';'{
-        $$ = new Continue(@1.first_line, @1.first_column);;
+        $$ = new Continue(@1.first_line, @1.first_column);
     }
     | ReturnSt{ 
         $$ = $1;
@@ -227,7 +242,11 @@ Instruction
     }
     |TernarioSt ';'{
         $$ = $1;
-    }   
+    } 
+    |
+     'GRAPH' ';'{
+         $$ = new Graficar(@1.first_line, @1.first_column);
+    }  
     
      
     
@@ -303,10 +322,10 @@ FunctionSt
     | 'FUNCTION' ID '(' Parametros ')' StatementFunc {
         $$ = new Function($2, $4,null, $6, @1.first_line, @1.first_column);
     }
-    | 'FUNCTION' ID '(' ')' ':' Tipo  StatementFunc {
+    | 'FUNCTION' ID '(' ')' ':' TipoParam  StatementFunc {
         $$ = new Function($2,null, $6, $7, @1.first_line, @1.first_column);
     }
-    | 'FUNCTION' ID '(' Parametros ')' ':' Tipo  StatementFunc {
+    | 'FUNCTION' ID '(' Parametros ')' ':' TipoParam StatementFunc {
         $$ = new Function($2,$4, $7, $8, @1.first_line, @1.first_column);
     }
 ;
@@ -322,15 +341,60 @@ StatementFunc
 
 
 Parametros
-    : Parametros ',' ID ':' Tipo {
+    : Parametros ',' ID ':' TipoParam {
         $1.push($3,$5);
         $$ = $1;
     }
-    | ID ':' Tipo {
+    | ID ':' TipoParam {
         $$ = [$1,$3];
     }
 ;
 
+TipoParam  
+    : 
+     NUMBER
+    { 
+        $$ = 0;
+    }
+    | STRING
+    { 
+        $$ = 1;
+    }
+    
+    | BOOLEAN
+    {
+        $$ = 2;
+    }
+    | NULL
+    {
+        $$ = 3;
+    }  
+    | ARRAY
+    {
+        $$ = 4;
+    }  
+    
+    | VOID
+    {
+        $$ = 5;
+    }   
+    | ANY
+    {
+        $$ = 6;
+    } 
+    | NUMBER ListaLlaves
+    {
+        $$ = 7;
+    } 
+    | STRING ListaLlaves
+    {
+        $$ = 8;
+    } 
+    | BOOLEAN ListaLlaves
+    {
+        $$ = 9;
+    }
+;
 
 
 
@@ -424,7 +488,7 @@ DeclarationArray
 ; 
 
 ListaIndices
-    : ListaIndices '[' Expr']'{
+    : ListaIndices '['Expr']'{
         $1.push($3);
         $$ = $1;
     }
@@ -435,14 +499,11 @@ ListaIndices
 
 
 Asignation
-    : /*ID '=' '['']' ';'
-    {   
-        $$ = new AsignationArray($1, null,null,null, @1.first_line, @1.first_column,1);
-    } 
-    |*/ ID '[' Expr ']' '=' Expr  ';'
-    { 
+    :  ArrayAcces '=' Expr ';'
+    {            
         
-        $$ = new AsignationArray($1, null,$3, $6, @1.first_line, @1.first_column,3);
+        //$$ = new AsignationArray2($1,$2,$4,@1.first_line, @1.first_column);
+         $$ = new pruebaAsign($1,$3,@1.first_line, @1.first_column);
     } 
     | ID '=' Expr ';'
     {   
@@ -706,19 +767,19 @@ ArrayDec
   ArrayAcces
   : ArrayAcces '['Expr']'{
 
-   $$ = new AccesoArray('',$3,$1,@1.first_line, @1.first_column);
+   $$ = new AccesoArray('',$3,$1,@1.first_line, @1.first_column,null,null);
 
   }
   | ID  '['Expr']'{
 
-    $$ = new AccesoArray($1,$3,null,@1.first_line, @1.first_column);
+    $$ = new AccesoArray($1,$3,null,@1.first_line, @1.first_column,null,null);
   }
 ;
 
 Expr
-    : '-' Expr % UMENOS
+    : '-' Expr %prec UMENOS
     {
-        $$ = new Arithmetic($2, null, ArithmeticOption.PLUS, @1.first_line,@1.first_column);
+        $$ = new Arithmetic($2, null, ArithmeticOption.NEGATIVE, @1.first_line,@1.first_column);
     } 
     |'!' Expr
     {
@@ -801,7 +862,7 @@ F
     }
     |ArrayDec
     { 
-        //$$ = new Literal($2, @1.first_line, @1.first_column, 5);
+     
         $$ = $1;
     }
     | DECIMAL
@@ -837,10 +898,6 @@ F
     {
         $$ = new Literal($1, @1.first_line, @1.first_column, 4);
     }
-   /* | ID ListaIndices
-    {
-        $$ = new Access($1,$3, @1.first_line, @1.first_column,1);
-    }*/
     |
      ID 'LENGTH' 
     {
@@ -852,6 +909,9 @@ F
     }
     |Call{
         $$ = $1;
+    }
+    |ArrayAcces 'LENGTH'{
+        $$ = new ArrayLenght($1,@1.first_line, @1.first_column);
     }
     |ArrayAcces{
         $$ =$1;

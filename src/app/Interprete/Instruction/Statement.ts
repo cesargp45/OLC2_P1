@@ -19,6 +19,8 @@ export class Statement extends Instruction{
                         return element; 
                     }else if(element.type == 'Break'){
                         //console.log("retorna: " +element.value+" tipo: " + element.type);
+                        newEnv.guardarSimGlobal();
+                        newEnv.guardarFunGlobal();
                         return element; 
                     }else if(element.type == 'Continue'){
                         //console.log("retorna: " +element.value+" tipo: " + element.type);
@@ -31,7 +33,9 @@ export class Statement extends Instruction{
                 errores.push(error);
             }
         }
-
+         
+        newEnv.guardarSimGlobal();
+        newEnv.guardarFunGlobal();
         
     }
 

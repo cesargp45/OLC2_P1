@@ -23,9 +23,14 @@ export class Arithmetic extends Expression{
 
     public execute(environment : Environment) : Retorno{
         const leftValue = this.left.execute(environment);
-        const rightValue = this.right.execute(environment);
+        let rightValue;
+        let tipoDominante;
+        if(this.right != null){
+             rightValue = this.right.execute(environment);
+             tipoDominante = this.tipoDominante(leftValue.type, rightValue.type);
+        }     
         let result : Retorno;
-        const tipoDominante = this.tipoDominante(leftValue.type, rightValue.type);
+        
 
         if(this.type == ArithmeticOption.PLUS){
             
@@ -83,7 +88,7 @@ export class Arithmetic extends Expression{
             
         }
         else if(this.type == ArithmeticOption.NEGATIVE){
-            if(tipoDominante == Type.NUMBER){
+            if(leftValue.type== Type.NUMBER){
                 result = {value : ((-1)*leftValue.value), type : Type.NUMBER};
             }else{
                 let errorN = new Error_(this.line,this.column,"Semantico",'No se puede negar: ' + leftValue.type );

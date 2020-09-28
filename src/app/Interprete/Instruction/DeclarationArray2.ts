@@ -5,6 +5,7 @@ import { Retorno, Type } from "../Abstract/Retorno";
 //import { env } from "process";
 import {Error_} from "../Error";
 import {errores} from "../Errores";
+import {tiposArr} from "../TiposArr";
 import { Arreglo } from "../Objects/Array";
 
 export class DeclarationArray2 extends Instruction{
@@ -31,7 +32,7 @@ export class DeclarationArray2 extends Instruction{
         if(v != null){
              let errorN = new Error_(this.line,this.column,"Semantico","La variable ya existe en este ambito");
              errores.push(errorN);
-            throw {error: "Semantico: la variable ya existe en este abito", linea: this.line, columna : this.column}
+            throw {error: "Semantico: La variable ya existe en este abito", linea: this.line, columna : this.column}
         } 
          
        let t ;
@@ -72,9 +73,11 @@ export class DeclarationArray2 extends Instruction{
        }
        
        
-       //if(this.Llaves.length == 1){
+       let dimension = this.Llaves.length ;
 
        let ex;
+       let t1 ;
+       let t2;
 
         if(this.value != null){
  
@@ -85,16 +88,57 @@ export class DeclarationArray2 extends Instruction{
               errores.push(errorN);
              throw {error: "Semantico: Se debe asignar un dato de tipo array", linea: this.line, columna : this.column}
          }
+
+
+         for (const iterator of tiposArr) {
+            //console.log("elem " + iterator.tipo);
+            t1 = iterator.tipo
+            if (t1 != Type.ARRAY){
+                 if(t2 == null || t1 == t2){
+                        t2 = t1;
+                 }else{
+                  while(tiposArr.length > 0){
+                       tiposArr.pop();
+                  } 
+                  let errorN = new Error_(this.line,this.column,"Semantico","Los arreglos tienen que ser de un mismo tipo de dato");
+                  errores.push(errorN);         
+                  throw {error: "Semantico: Los arrreglos tienen que ser de un mismo tipo de dato", linea: this.line, columna : this.column};
+                 }
+            }
+      }
+
+          while(tiposArr.length > 0){
+          tiposArr.pop();
+         } 
+          
+
+          if(t2 != null){
+            if(t != t2 ){
+                let errorN = new Error_(this.line,this.column,"Semantico","Los tipos de datos insertados, no coinciden con el tipo de dato del arreglo");
+                errores.push(errorN);         
+                throw {error: "Semantico: Los tipos de datos insertados, no coinciden con el tipo de dato del arreglo", linea: this.line, columna : this.column};
+               }
+
+          }else{
+
+            if(t1 == null && t2 == null){
+               
+             }
+
+          }
+ 
  
       }
-         ex.value.imprimir();
+        
+
+           
  
            if(this.value == null && this.tipo != null){// let id:tipo[];/let id:tipo[] = [];
               
              if(this.tipoAsig == 2){
                 let arreglo = new Array;
-                let newArray = new Arreglo(Type.ARRAY,arreglo,this.Llaves.lengthdim);
-                 environment.guardar(this.id, newArray, Type.ARRAY,"let",arreglo,t);
+                let newArray = new Arreglo(Type.ARRAY,arreglo,this.Llaves.length);
+                 environment.guardarN(this.id, newArray, Type.ARRAY,"let",arreglo,t);
              }else{
                  let errorN = new Error_(this.line,this.column,"Semantico","La variable const debe estar inicializado");
                  errores.push(errorN);  
@@ -104,10 +148,10 @@ export class DeclarationArray2 extends Instruction{
          }else if (this.value != null && this.tipo != null){ //let id:tipo = [lista]; /const
                     
                  if(this.tipoAsig == 1){
-                     environment.guardar(this.id, ex.value, Type.ARRAY,"const",ex.value,t);
+                     environment.guardarN(this.id, ex.value, Type.ARRAY,"const",ex.value,t);
                  }else{
                      //console.log("tipooo: "+ex.value.tipo);
-                     environment.guardar(this.id, ex.value, Type.ARRAY,"let",ex.value,t);
+                     environment.guardarN(this.id, ex.value, Type.ARRAY,"let",ex.value,t);
                  }
                  
          }

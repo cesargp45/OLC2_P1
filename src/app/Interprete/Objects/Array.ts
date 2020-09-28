@@ -24,7 +24,10 @@ export class  Arreglo{
     }
 
     length(){
-        return this.atributos.length;
+        
+            return this.atributos.length;
+        
+        
     }
 
     public toString() : string {
@@ -37,11 +40,7 @@ export class  Arreglo{
 
     }
 
-    public imprimir() {
-       for (const iterator of this.atributos) {
-           console.log("elemento: "+iterator);
-       }
-    }
+  
 
 
 

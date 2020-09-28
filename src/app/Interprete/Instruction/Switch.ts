@@ -60,6 +60,7 @@ export class Switch extends Instruction{
                 //console.log(element);
                 if(element.type == 'Break'){
                     return; 
+                    
                 }
                 else if(element.type == 'Return'){
                     return element;  

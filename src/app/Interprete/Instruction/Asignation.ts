@@ -3,8 +3,9 @@ import { Environment } from "../Symbol/Environment";
 import { Expression } from "../Abstract/Expression";
 import { env } from "process";
 import { Type } from '../Abstract/Retorno';
-import {Error_} from "../Error"
-import {errores} from "../Errores"
+import {Error_} from "../Error";
+import {errores} from "../Errores";
+import {tiposArr} from "../TiposArr";
 
 export class Asignation extends Instruction{
 
@@ -52,54 +53,65 @@ export class Asignation extends Instruction{
             const val = this.value.execute(environment);
             if(v.type==Type.ANY || v.type == val.type){
                 if(v.tipoVar == "let"){
-                    if (val.type == Type.ARRAY) {
 
-                        let arreglo: Array<any> = [];
-                        let siany = null;
-                        let igual;
-                        if (this.value != null) {
-                            for (const c of val.value) {
-                                let valor = c.execute(environment);
-                               // console.log(valor);
-                                if (valor.type != v.typeArray) {
-                                     if(v.typeArray != null ){
-                                        let errorN = new Error_(this.line, this.column, "Semantico", "el valor  [" + valor.value + "]  no coincide con el tipo del arreglo");
-                                        errores.push(errorN);
-                                        throw { error: "Semantico: el valor  [" + valor.value + "]  no coincide con el tipo del arreglo", linea: this.line, columna: this.column };
-                                     }else{
-                                        if (siany == null){
-                                            siany = valor.type;
-                                        }else{
-                                            if(siany != valor.type){
-                                                let errorN = new Error_(this.line, this.column, "Semantico", "no se acepta un arreglo de multiples tipos");
-                                                errores.push(errorN);
-                                                throw { error: "Semantico: no se acepta un arreglo de multiples tipos, linea: this.line, columna: this.column "};
-                                            }
-                                        }
-                                     }
-                                    
-
-                                }
-                            }
+                    if(val.type == Type.ARRAY){
+                                       
+                        let t1 ;
+                        let t2;
+                  
+                          for (const iterator of tiposArr) {
                              
-                            for (const a of val.value) {
-                                let valor = a.execute(environment);
-                                arreglo.push(valor.value);
-                                igual = valor.type;
-                            }
+                             t1 = iterator.tipo
+                             if (t1 != Type.ARRAY){
+                                  if(t2 == null || t1 == t2){
+                                         t2 = t1;
+                                  }else{
+                                   while(tiposArr.length > 0){
+                                        tiposArr.pop();
+                                   } 
+                                   let errorN = new Error_(this.line,this.column,"Semantico","Los arreglos tienen que ser de un mismo tipo de dato");
+                                   errores.push(errorN);         
+                                   throw {error: "Semantico: Los arrreglos tienen que ser de un mismo tipo de dato", linea: this.line, columna : this.column};
+                                  }
+                             }
+                       }
+                 
+                           while(tiposArr.length > 0){
+                           tiposArr.pop();
+                           
+                          } 
 
-                        }
-                        if(v.typeArray == null || v.typeArray == Type.ANY  ){
-                            environment.guardar(this.id, arreglo, val.type,v.tipoVar,arreglo,igual); 
-                        }else{
-                            environment.guardar(this.id, arreglo, val.type,v.tipoVar,arreglo,v.typeArray); 
-                        }
-                       
+                          //.log("pasa aqui: "+t2);
+                         // console.log("variable: "+v.type);
+
+                           if(v.type == Type.ANY){
+                               if(t2 != null){
+                                environment.guardar(this.id, val.value, val.type,v.tipoVar,v.listaVal,t2); 
+                               }else{
+                                   if(t1 == Type.ARRAY && t2 == null){
+                                      environment.guardar(this.id, val.value, val.type,v.tipoVar,v.listaVal,v.typeArray);  
+                                   }
+                               }
+                            
+                           }else{
+
+                            if(v.typeArray != t2 || t2 == null){
+                                let errorN = new Error_(this.line,this.column,"Semantico","Los tipos de datos insertados, no coinciden con el tipo de dato del arreglo");
+                                errores.push(errorN);         
+                                throw {error: "Semantico: Los tipos de datos insertados, no coinciden con el tipo de dato del arreglo", linea: this.line, columna : this.column};
+                               }
+                                   
+                               environment.guardar(this.id, val.value, val.type,v.tipoVar,v.listaVal,v.typeArray); 
+
+                           }
+                         
 
                     }else{
                         environment.guardar(this.id, val.value, val.type,v.tipoVar,v.listaVal,v.typeArray); 
                     }
 
+                 
+                    
                 }else{
                     let errorN = new Error_(this.line,this.column,"Semantico","La variable es de tipo constante, no puede cambiar su valor");
                     errores.push(errorN);

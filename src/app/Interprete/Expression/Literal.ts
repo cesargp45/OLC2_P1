@@ -12,7 +12,7 @@ export class Literal extends Expression{
             return {value : Number(this.value), type : Type.NUMBER};
         }else if(this.type == 2){
              let cadena = this.value;
-             console.log("valor inicial: "+cadena);
+             //console.log("valor inicial: "+cadena);
               cadena = cadena.replace(/\\n/g,'\n'); 
               cadena = cadena.replace(/\\t/g,'\t'); 
               cadena = cadena.replace(/\\r/g,'\r'); 

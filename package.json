@@ -29,6 +29,7 @@
     "@ngstack/code-editor": "^2.1.0",
     "@ngstack/translate": "^4.0.0",
     "@popperjs/core": "^2.4.4",
+    "@types/jquery": "^3.5.1",
     "angular-cli-ghpages": "^0.6.2",
     "bootstrap": "^4.5.2",
     "codemirror": "^5.57.0",

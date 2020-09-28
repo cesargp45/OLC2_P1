@@ -4,6 +4,8 @@ import { Retorno, Type } from "../Abstract/Retorno";
 import { Arreglo } from "../Objects/Array";
 import {Error_} from "../Error";
 import {errores} from "../Errores";
+import {Tipo_} from "../Tipo";
+import {tiposArr} from "../TiposArr";
 
 export class DecArray extends Expression{
 
@@ -36,11 +38,13 @@ export class DecArray extends Expression{
                 
              }           
             arrayValues.push(expr.value);
-            //type = expr.type
+            
+            let tipoN = new Tipo_(expr.type);
+            tiposArr.push(tipoN);  
 
         });
                
-        type = tipoDatos2;
+        type = tipoDatos;
         let newArray = new Arreglo(type,arrayValues,dim);
         return {value: newArray , type:Type.ARRAY,dim:1};
     }

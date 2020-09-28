@@ -5,6 +5,7 @@ import { Retorno, Type } from "../Abstract/Retorno";
 import { env } from "process";
 import {Error_} from "../Error";
 import {errores} from "../Errores";
+import {tiposArr} from "../TiposArr";
 
 export class Declaration extends Instruction{
     public idt: string;
@@ -61,14 +62,17 @@ export class Declaration extends Instruction{
         }
 
        }
-       const vall = this.value.execute(environment);
+       let vall;
+       if(this.value != null){
+         vall= this.value.execute(environment);
 
-       if(vall == undefined){
-         let errorN = new Error_(this.line,this.column,"Semantico","no se puede asignar un valor undefined");
-         errores.push(errorN);  
-         throw {error: "Semantico: no se puede asignar un valor undefined", linea: this.line, columna : this.column};
+         if(vall == undefined){
+            let errorN = new Error_(this.line,this.column,"Semantico","no se puede asignar un valor undefined");
+            errores.push(errorN);  
+            throw {error: "Semantico: no se puede asignar un valor undefined", linea: this.line, columna : this.column};
+          }
        }
-
+       
 
         if (this.tipo == null && this.value == null){  // let id;
            
@@ -81,12 +85,74 @@ export class Declaration extends Instruction{
             }
                       
         }else if(this.tipo == null && this.value != null){ //let id = exp; / const
-           
+         
             const val = this.value.execute(environment);
             if(this.tipoAsig == 1){
-                environment.guardarN(this.id, val.value, val.type,"const",null,null);
+                if (val.type == Type.ARRAY){
+
+                    let t1 ;
+                    let t2;
+              
+                      for (const iterator of tiposArr) {
+                         
+                         t1 = iterator.tipo
+                         if (t1 != Type.ARRAY){
+                              if(t2 == null || t1 == t2){
+                                     t2 = t1;
+                              }else{
+                               while(tiposArr.length > 0){
+                                    tiposArr.pop();
+                               } 
+                               let errorN = new Error_(this.line,this.column,"Semantico","Los arreglos tienen que ser de un mismo tipo de dato");
+                               errores.push(errorN);         
+                               throw {error: "Semantico: Los arrreglos tienen que ser de un mismo tipo de dato", linea: this.line, columna : this.column};
+                              }
+                         }
+                       }
+             
+                           while(tiposArr.length > 0){
+                           tiposArr.pop();
+                       
+                         } 
+
+                         environment.guardarN(this.id, val.value, val.type,"const",null,t2);
+                }else{
+                    environment.guardarN(this.id, val.value, val.type,"const",null,null);
+                }
+                              
             }else{
-                environment.guardarN(this.id, val.value, val.type,"let",null,null);
+                if (val.type == Type.ARRAY){
+
+                    let t1 ;
+                    let t2;
+              
+                      for (const iterator of tiposArr) {
+                         
+                         t1 = iterator.tipo
+                         if (t1 != Type.ARRAY){
+                              if(t2 == null || t1 == t2){
+                                     t2 = t1;
+                              }else{
+                               while(tiposArr.length > 0){
+                                    tiposArr.pop();
+                               } 
+                               let errorN = new Error_(this.line,this.column,"Semantico","Los arreglos tienen que ser de un mismo tipo de dato");
+                               errores.push(errorN);         
+                               throw {error: "Semantico: Los arrreglos tienen que ser de un mismo tipo de dato", linea: this.line, columna : this.column};
+                              }
+                         }
+                       }
+             
+                           while(tiposArr.length > 0){
+                           tiposArr.pop();
+                       
+                         } 
+
+                         environment.guardarN(this.id, val.value, val.type,"let",null,t2);
+                }else{
+                    environment.guardarN(this.id, val.value, val.type,"let",null,null);
+                }
+               
             }
             
 

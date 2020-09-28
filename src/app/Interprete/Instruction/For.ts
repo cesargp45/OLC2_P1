@@ -20,12 +20,16 @@ export class For extends Instruction{
         while(cond.value == true){
             
             const element = this.code.execute(newEnv);
+             newEnv.guardarSimGlobal();
+             newEnv.guardarFunGlobal();
             if(element != null || element != undefined){
                 console.log(element);
                 if(element.type == 'Break')
                     break;
                 else if(element.type == 'Continue')
                     continue;
+                else if(element.type == 'Return')
+                    return element;    
             }
              let asig =this.asignacion.execute(newEnv);
             cond = this.condicion.execute(newEnv);

@@ -24,6 +24,8 @@ export class While extends Instruction{
                     break;
                 else if(element.type == 'Continue')
                     continue;
+                else if(element.type == 'Return')
+                    return element;
             }
             condition = this.condition.execute(env);
             if(condition.type != Type.BOOLEAN){

@@ -18,16 +18,22 @@ export class For2 extends Instruction{
             let decla = this.dec.execute(newEnv);
             let varia = newEnv.getVar(decla.value);  
             let arr = newEnv.getVar(this.arreglo);
-
+            
             if(arr == null ){
                 let errorN = new Error_(this.line,this.column,"Semantico","La variable " +this.arreglo+ " no existe");
-                console.log("arreglo no existe");
+                //console.log("arreglo no existe");
                 errores.push(errorN);
                 throw {error: "Semantico: Semantico:La variable "+this.arreglo+" no existe", linea: this.line, columna : this.column}
             } 
+
+            if(arr.type != Type.ARRAY ){
+                let errorN = new Error_(this.line,this.column,"Semantico"," La variable "+this.declaracion+" no es un arreglo para iterar");
+                errores.push(errorN);
+                throw {error: "Semantico: Semantico: La variable "+this.declaracion+" no es un arreglo para iterar", linea: this.line, columna : this.column}
+            } 
  
             if(varia == null ){
-             console.log("variable");
+             //console.log("variable");
              let errorN = new Error_(this.line,this.column,"Semantico","La variable "+decla.value+" no existe");
              errores.push(errorN);
              throw {error: "Semantico: Semantico:La variable "+decla.value+" no existe", linea: this.line, columna : this.column}
@@ -44,8 +50,8 @@ export class For2 extends Instruction{
                 }
              }
                varia = newEnv.getVar(decla.value); 
- 
-             for (let a in arr.valor) {
+                let recorrer = arr.valor.atributos;
+             for (let a in recorrer) {
                  let m = parseInt(a, 10);
                  newEnv.guardar(varia.id,m,varia.type,varia.tipoVar,varia.listaVal,varia.typeArray);
                  const element = this.code.execute(newEnv );//
@@ -55,8 +61,14 @@ export class For2 extends Instruction{
                      break;
                  else if(element.type == 'Continue')
                      continue;
+                 else if(element.type == 'Return')
+                     return element; 
+                        
               }
               arr = newEnv.getVar(this.arreglo);
+              recorrer = arr.valor.atributos;
+                newEnv.guardarSimGlobal();
+                newEnv.guardarFunGlobal();
             }
  
 
@@ -66,11 +78,18 @@ export class For2 extends Instruction{
 
             let varia = env.getVar(this.declaracion);         
             let arr = env.getVar(this.arreglo);
-           if(arr == null ){
+           
+            if(arr == null ){
                let errorN = new Error_(this.line,this.column,"Semantico","La variable "+this.arreglo+" no existe");
                errores.push(errorN);
                throw {error: "Semantico: Semantico:La variable"+this.arreglo+" no existe", linea: this.line, columna : this.column}
            } 
+
+           if(arr.type != Type.ARRAY ){
+            let errorN = new Error_(this.line,this.column,"Semantico"," La variable "+this.declaracion+" no es un arreglo para iterar");
+            errores.push(errorN);
+            throw {error: "Semantico: Semantico: La variable "+this.declaracion+" no es un arreglo para iterar", linea: this.line, columna : this.column}
+          } 
 
            if(varia == null ){
             let errorN = new Error_(this.line,this.column,"Semantico","La variable "+this.declaracion+" no existe");
@@ -90,8 +109,8 @@ export class For2 extends Instruction{
                }
             }
               varia = env.getVar(this.declaracion); 
-
-            for (let a in arr.valor) {
+              let recorrer = arr.valor.atributos;
+            for (let a in recorrer) {
                 let m = parseInt(a, 10);
                env.guardar(varia.id,m,varia.type,varia.tipoVar,varia.listaVal,varia.typeArray);
                 const element = this.code.execute(env);//
@@ -101,8 +120,13 @@ export class For2 extends Instruction{
                     break;
                 else if(element.type == 'Continue')
                     continue;
+                else if(element.type == 'Return')
+                    return element;    
              }
              arr = env.getVar(this.arreglo);
+             recorrer = arr.valor.atributos;
+             newEnv.guardarSimGlobal();
+             newEnv.guardarFunGlobal();
            }
 
            
@@ -118,6 +142,12 @@ export class For2 extends Instruction{
                errores.push(errorN);
                throw {error: "Semantico: Semantico:La variable "+this.arreglo+" no existe", linea: this.line, columna : this.column}
            } 
+
+           if(arr.type != Type.ARRAY ){
+            let errorN = new Error_(this.line,this.column,"Semantico"," La variable "+this.declaracion+" no es un arreglo para iterar");
+            errores.push(errorN);
+            throw {error: "Semantico: Semantico: La variable "+this.declaracion+" no es un arreglo para iterar", linea: this.line, columna : this.column}
+          } 
 
            if(varia == null ){
             let errorN = new Error_(this.line,this.column,"Semantico","La variable "+decla.value+" no existe");
@@ -137,8 +167,9 @@ export class For2 extends Instruction{
                }
             }
               varia = newEnv.getVar(decla.value); 
+              let recorrer = arr.valor.atributos;
 
-            for (let a of arr.valor) {
+            for (let a of recorrer) {
                 //let m = parseInt(a, 10);
                 newEnv.guardar(varia.id,a,varia.type,varia.tipoVar,varia.listaVal,varia.typeArray);
                 const element = this.code.execute(newEnv);//
@@ -148,8 +179,13 @@ export class For2 extends Instruction{
                     break;
                 else if(element.type == 'Continue')
                     continue;
+                else if(element.type == 'Return')
+                    return element;    
              }
              arr = newEnv.getVar(this.arreglo);
+             recorrer = arr.valor.atributos;
+                newEnv.guardarSimGlobal();
+                newEnv.guardarFunGlobal();
            }
 
 
@@ -163,6 +199,12 @@ export class For2 extends Instruction{
                errores.push(errorN);
                throw {error: "Semantico: Semantico:La variable"+this.arreglo+" no existe", linea: this.line, columna : this.column}
            } 
+
+           if(arr.type != Type.ARRAY ){
+            let errorN = new Error_(this.line,this.column,"Semantico"," La variable "+this.declaracion+" no es un arreglo para iterar");
+            errores.push(errorN);
+            throw {error: "Semantico: Semantico: La variable "+this.declaracion+" no es un arreglo para iterar", linea: this.line, columna : this.column}
+        } 
 
            if(varia == null ){
             let errorN = new Error_(this.line,this.column,"Semantico","La variable "+this.declaracion+" no existe");
@@ -182,8 +224,8 @@ export class For2 extends Instruction{
                }
             }
               varia = env.getVar(this.declaracion); 
-
-            for (let a of arr.valor) {
+              let recorrer = arr.valor.atributos;
+            for (let a of recorrer) {
                 //let m = parseInt(a, 10);
                env.guardar(varia.id,a,varia.type,varia.tipoVar,varia.listaVal,varia.typeArray);
                 const element = this.code.execute(env );//
@@ -193,8 +235,14 @@ export class For2 extends Instruction{
                     break;
                 else if(element.type == 'Continue')
                     continue;
+                else if(element.type == 'Return')
+                    return element;
              }
              arr = env.getVar(this.arreglo);
+             recorrer = arr.valor.atributos;
+
+                newEnv.guardarSimGlobal();
+                newEnv.guardarFunGlobal();
            }
             
         }

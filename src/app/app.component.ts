@@ -6,17 +6,24 @@ import { errores } from './Interprete/Errores';
 import { Error_ } from "./Interprete/Error";
 import { Function } from "./Interprete/Instruction/Function";
 import { Declaration } from "./Interprete/Instruction/Declaration";
-import { DeclarationArray } from "./Interprete/Instruction/DeclarationArray";
-//import Parser from "./Grammar/prueba.js";
+import { DeclarationArray2 } from "./Interprete/Instruction/DeclarationArray2";
+ import {resultado} from "./Interprete/traduc"
 import Parser from "./Grammar/Grammar.js";
 import { Break } from './Interprete/Instruction/Break';
+import { Simbolo } from "./Interprete/simbolo";
+import { simbolog } from "./Interprete/simboloG";
+import { simboloGlobal } from "./Interprete/simboloGlobal";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
 export class AppComponent implements OnInit  {
+  er : Array<Error_> ;
+  graphi : Array<Simbolo> ;
+  simglobal : Array<Simbolo> ;
   textoConsola1: string = "";
   textoConsola2: string = "";
   ngOnInit() {
@@ -43,6 +50,8 @@ export class AppComponent implements OnInit  {
   "enabled": true
   }
   };
+
+ 
   
   onCodeChanged1(value) {        // recibe el valor de la consola 1
     this.textoConsola1 = value; 
@@ -53,6 +62,7 @@ export class AppComponent implements OnInit  {
   
 
   public ejecutar():void{
+     this.limpiar();
      
     try {
       const ast = Parser.parse(this.textoConsola1);
@@ -84,7 +94,7 @@ export class AppComponent implements OnInit  {
 
        for (const instr of ast) {
         try {
-          if (instr instanceof Declaration || instr instanceof DeclarationArray) {
+          if (instr instanceof Declaration || instr instanceof DeclarationArray2) {
             //const instruccionE = instr.execute(env);
             const actual = instr.execute(env);
 
@@ -104,7 +114,7 @@ export class AppComponent implements OnInit  {
 
         for (const instr of ast) {
           try {
-              if(instr instanceof Function || instr instanceof Declaration || instr instanceof DeclarationArray){
+              if(instr instanceof Function || instr instanceof Declaration || instr instanceof DeclarationArray2){
 
               }else{
 
@@ -154,6 +164,30 @@ export class AppComponent implements OnInit  {
         }
 
          env.imprimirLista();
+         
+        // imprimir la salida del codigo
+         let salida ="";
+        for (const it of resultado) {
+             salida += it+'\n';
+        }
+
+         this.imprimirResult(salida);
+       // terminasalida del codigo
+
+
+        // imprimir errore
+       console.log("lista de errores :");
+       for (const it of errores) {
+            console.log(it);
+       }
+       console.log("----------------");
+
+       this.er = errores;
+       this.graphi = simbolog;
+       
+        env.guardarSimGlobal();
+        env.guardarFunGlobal();
+        this.simglobal = simboloGlobal;
 
       } else{
         alert("No hay nada para analizar");
@@ -163,27 +197,38 @@ export class AppComponent implements OnInit  {
      
   }
   catch (error) {
-      console.log(error);
+    console.log(error);
   }
   
-  console.log(errores);
+   console.log(errores);
 
   }
   
 
-    imprimir(){
-     
-      alert(this.textoConsola1);
+    imprimir(){    
+      alert(this.textoConsola1);       
+    }
 
-      (document.getElementById("consola2") as HTMLInputElement).value= "hola que tal";
+    imprimirResult(valor:any){
+      (document.getElementById("C") as HTMLInputElement).value=valor;
+    }
+    
+    limpiar(){
+      (document.getElementById("C") as HTMLInputElement).value= "";
+      
+      while(resultado.length > 0){
+        resultado.pop();   
+      } 
+      while(errores.length > 0){
+         errores.pop();   
+      }  
+        
+      while(simbolog.length > 0){
+        simbolog.pop();   
+     }
 
     }
 
-    imprimir2(){
-     
-      alert(this.textoConsola2);
-
-    }
 
 
 

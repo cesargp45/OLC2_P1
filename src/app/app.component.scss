@@ -45,6 +45,16 @@
   
   }
 
+
+  .lblerr label {//
+    border: 1px solid rgb(0, 0, 0);
+    position: relative;
+    top: 200px;
+    left: 575PX;
+    color: rgb(0, 0, 0);
+  
+  }
+
   .botones{
     position: relative;
     top: -300px;
@@ -62,3 +72,76 @@
     top: -280px;
     left: 1125PX;
   }
+
+
+  .purple-border textarea {
+    border: 1px solid #1F35AD;
+    background-color: rgb(28, 28, 29);
+    color: blanchedalmond;
+      width: 1000px;
+      height: 500px;
+      position: relative;
+      left: 100px;
+      top: 93px;
+  
+    
+  }
+  .purple-border .form-control:focus {
+      border: 1px solid #1F35AD;
+      box-shadow: 0 0 0 0.5rem rgba(0, 38, 255, 0.25);
+  
+  }
+
+  .purple-border label {
+    border: 1px solid rgb(0, 0, 0);
+    position: relative;
+    left: 100px;
+    top: 90px;
+    color: rgb(0, 0, 0);
+
+}
+
+.row4 {
+  width: 800px;
+  height: 800px;
+  color: rgb(0, 0, 0);
+  top: 50%;
+  left: 30%;
+  position:absolute; top:1875px;left:50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  padding: 50px 70px;
+  margin-bottom: 100px;  
+}
+
+
+
+.row3 {
+  width: 800px;
+  height: 800px;
+  color: rgb(0, 0, 0);
+  top: 50%;
+  left: 30%;
+  position:absolute; top:4000px;left:50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  padding: 50px 70px;
+  margin-bottom: 100px;  
+}
+
+
+
+.row2 {
+  width: 800px;
+  height: 800px;
+  color: rgb(0, 0, 0);
+  top: 50%;
+  left: 30%;
+  position:absolute; top:8000px;left:50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  padding: 50px 70px;
+  margin-bottom: 100px;  
+}
+
+

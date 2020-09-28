@@ -60,6 +60,8 @@ export class Function extends Instruction{
 
        
     }
+
+    public getDot(ant:string){}
 }
 
 

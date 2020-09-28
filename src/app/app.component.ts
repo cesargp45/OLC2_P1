@@ -13,6 +13,9 @@ import { Break } from './Interprete/Instruction/Break';
 import { Simbolo } from "./Interprete/simbolo";
 import { simbolog } from "./Interprete/simboloG";
 import { simboloGlobal } from "./Interprete/simboloGlobal";
+import { cont } from "./Interprete/contador";
+import { Aumentar} from "./Interprete/contador";
+import { Reiniciar } from "./Interprete/contador";
 
 @Component({
   selector: 'app-root',
@@ -61,14 +64,63 @@ export class AppComponent implements OnInit  {
   }
   
 
-  public ejecutar():void{
+
+
+
+
+
+  public generarDot():void{
+       try{
+       Reiniciar();
+      let dot:string = "digraph G { \n";
+      let nodo= " Node"+cont;
+      dot+=nodo+"[label=Global]; \n";
+      Aumentar();
+
+      const ast = Parser.parse(this.textoConsola1);
+      const env = new Environment(null);
+      
+      if(ast[0]!= null){
+
+
+    for (const instr of ast) {
+      try {
+                 
+            if (instr instanceof Instruction) {
+             
+              dot += instr.getDot(nodo);
+                           
+            } 
+       
+      } catch (error) {
+        
+         console.log(error);
+      }
+    }
+    dot+='}';
+
+     console.log(dot);
+   }
+   }catch(error){
+
+   }
+  }
+
+
+
+
+
+ public ejecutar():void{
      this.limpiar();
+     
      
     try {
       const ast = Parser.parse(this.textoConsola1);
       const env = new Environment(null);
       
       if(ast[0]!= null){
+
+        
 
          // primera pasada types
 

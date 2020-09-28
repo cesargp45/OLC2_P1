@@ -142,4 +142,6 @@ export class AsignationArray extends Instruction{
         
     }
 
+    public getDot(ant:string){}
+
 }

@@ -6,6 +6,8 @@ import { Type } from '../Abstract/Retorno';
 import {Error_} from "../Error";
 import {errores} from "../Errores";
 import {tiposArr} from "../TiposArr";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 export class Asignation extends Instruction{
 
@@ -165,5 +167,44 @@ export class Asignation extends Instruction{
         
     }
 
- 
+    public getDot(ant:string){
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=Asignation]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+        
+
+            
+
+        if (this.tipo == 1){ //=
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"=\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            dot+= this.value.getDot(nodo);
+            return dot;
+          
+        }else  if (this.tipo == 2){ //++
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= "+this.id+"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \"++\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+            return dot;
+
+        } if (this.tipo == 3){ //--
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \"--\"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+            return dot;
+
+        }
+    }
 }

@@ -11,5 +11,7 @@ export abstract class Instruction {
     }
 
     public abstract execute(environment : Environment) : any;
+    public abstract getDot(ant:string) : any;
+
 
 }

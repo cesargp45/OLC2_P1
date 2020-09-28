@@ -4,6 +4,8 @@ import { Environment } from "../Symbol/Environment";
 import { Type } from "../Abstract/Retorno";
 import {Error_} from "../Error"
 import {errores} from "../Errores"
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 export class For2 extends Instruction{
     // le puse un atributo extra
@@ -246,5 +248,161 @@ export class For2 extends Instruction{
            }
             
         }
+    }
+
+    public getDot(ant:string){
+
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=instruccion]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+
+            let nodo0= "Node"+cont;
+            dot+=nodo0+"[label= for]; \n";
+            dot+= nodo+"->"+nodo0+'\n';
+            Aumentar();
+
+            
+
+        if(this.tipo == 1){
+            let nodo7= "Node"+cont;
+            dot+=nodo7+"[label= \"(\"]; \n";
+            dot+= nodo+"->"+nodo7+'\n';
+            Aumentar();
+
+            dot+= this.dec.getDot(nodo);
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"IN\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \""+this.arreglo+"\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+
+            let nodo5= "Node"+cont;
+            dot+=nodo5+"[label= \")\"]; \n";
+            dot+= nodo+"->"+nodo5+'\n';
+            Aumentar();
+
+            let nodo9= "Node"+cont;
+            dot+=nodo9+"[label= \"statement\"]; \n";
+            dot+= nodo+"->"+nodo9+'\n';
+            Aumentar();
+
+            dot+= this.code.getDot(nodo9);
+
+            return dot;
+
+        }else if(this.tipo == 2){
+
+            let nodo7= "Node"+cont;
+            dot+=nodo7+"[label= \"(\"]; \n";
+            dot+= nodo+"->"+nodo7+'\n';
+            Aumentar();
+
+            let nodo6= "Node"+cont;
+            dot+=nodo6+"[label= \""+this.declaracion+"\"]; \n";
+            dot+= nodo+"->"+nodo6+'\n';
+            Aumentar();
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"IN\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \""+this.arreglo+"\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+
+            let nodo5= "Node"+cont;
+            dot+=nodo5+"[label= \")\"]; \n";
+            dot+= nodo+"->"+nodo5+'\n';
+            Aumentar();
+
+            let nodo9= "Node"+cont;
+            dot+=nodo9+"[label= \"statement\"]; \n";
+            dot+= nodo+"->"+nodo9+'\n';
+            Aumentar();
+
+            dot+= this.code.getDot(nodo9);
+
+            return dot;
+
+        }else if(this.tipo == 3){
+
+            let nodo7= "Node"+cont;
+            dot+=nodo7+"[label= \"(\"]; \n";
+            dot+= nodo+"->"+nodo7+'\n';
+            Aumentar();
+
+            dot+= this.dec.getDot(nodo);
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"OF\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \""+this.arreglo+"\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+
+            let nodo5= "Node"+cont;
+            dot+=nodo5+"[label= \")\"]; \n";
+            dot+= nodo+"->"+nodo5+'\n';
+            Aumentar();
+
+            let nodo9= "Node"+cont;
+            dot+=nodo9+"[label= \"statement\"]; \n";
+            dot+= nodo+"->"+nodo9+'\n';
+            Aumentar();
+
+            dot+= this.code.getDot(nodo9);
+
+            return dot;
+
+        }else if(this.tipo == 4){
+
+            let nodo7= "Node"+cont;
+            dot+=nodo7+"[label= \"(\"]; \n";
+            dot+= nodo+"->"+nodo7+'\n';
+            Aumentar();
+
+            let nodo6= "Node"+cont;
+            dot+=nodo6+"[label= \""+this.declaracion+"\"]; \n";
+            dot+= nodo+"->"+nodo6+'\n';
+            Aumentar();
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"OF\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \""+this.arreglo+"\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+
+            let nodo5= "Node"+cont;
+            dot+=nodo5+"[label= \")\"]; \n";
+            dot+= nodo+"->"+nodo5+'\n';
+            Aumentar();
+
+            let nodo9= "Node"+cont;
+            dot+=nodo9+"[label= \"statement\"]; \n";
+            dot+= nodo+"->"+nodo9+'\n';
+            Aumentar();
+
+            dot+= this.code.getDot(nodo9);
+
+            return dot;
+
+        }
+
     }
 }

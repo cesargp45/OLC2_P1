@@ -21,4 +21,6 @@ export class registrarError extends Instruction {
 
     }  
 
+    public getDot(ant:string){}
+
 }   

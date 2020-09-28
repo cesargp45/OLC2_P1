@@ -502,7 +502,7 @@ Asignation
     :  ArrayAcces '=' Expr ';'
     {            
         
-        //$$ = new AsignationArray2($1,$2,$4,@1.first_line, @1.first_column);
+        
          $$ = new pruebaAsign($1,$3,@1.first_line, @1.first_column);
     } 
     | ID '=' Expr ';'

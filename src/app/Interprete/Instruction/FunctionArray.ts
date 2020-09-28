@@ -4,6 +4,8 @@ import { Environment } from "../Symbol/Environment";
 import { Type } from "../Abstract/Retorno";
 import {Error_} from "../Error"
 import {errores} from "../Errores"
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 export class FunctionArray extends Instruction{
 
@@ -60,5 +62,49 @@ export class FunctionArray extends Instruction{
 
         }
         
+    }
+
+    public getDot(ant:string){
+
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=function]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+
+            
+
+        if(this.tipo == 1){
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \""+this.id+"\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"push\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            dot+= this.elemento.getDot(nodo);
+           
+            return dot;
+
+        }else if(this.tipo == 2){
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \""+this.id+"\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"pop\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+           
+            return dot;
+
+        }
+        return "";
     }
 }

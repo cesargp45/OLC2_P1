@@ -5,6 +5,9 @@ import { Arreglo } from "../Objects/Array";
 import { Error_ } from "../Error";
 import { errores } from "../Errores";
 import { tiposArr } from "../TiposArr";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
+
 
 
 
@@ -210,6 +213,26 @@ export class AccesoArray extends Expression {
 
     }
 
+     public getDot(ant:string){
+        
+        if(this.id != ''){
+          
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=Acess]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
 
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \""+this.id+"["+this.index+"]\"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+            return dot;
+        }
+
+         return "";
+     }
+
+     
 
 }

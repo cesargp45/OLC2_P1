@@ -5,6 +5,8 @@ import { Retorno } from "../Abstract/Retorno";
 import { Type } from '../Abstract/Retorno';
 import {Error_} from "../Error";
 import {errores} from "../Errores";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 
 export class Access extends Expression{
@@ -44,5 +46,43 @@ export class Access extends Expression{
             
         }
         
+    }
+    public getDot(ant:string){
+
+        if(this.tipo == 1){
+          
+            let dot = "";
+            let nodo= "Node"+cont;
+            dot+=nodo+"[label=Acess]; \n";
+            dot+= ant+"->"+nodo+'\n';
+            Aumentar();
+    
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label = "+this.id+"]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+                return dot;
+        }else if(this.tipo == 2){
+          
+            let dot = "";
+            let nodo= "Node"+cont;
+            dot+=nodo+"[label=Acess]; \n";
+            dot+= ant+"->"+nodo+'\n';
+            Aumentar();
+    
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label = "+this.id+"]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+
+                let nodo2= "Node"+cont;
+                dot+=nodo2+"[label = \" .Length\"]; \n";
+                dot+= nodo+"->"+nodo2+'\n';
+                Aumentar();
+
+                return dot;
+        }
+    
+             return "";
     }
 }

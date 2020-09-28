@@ -4,6 +4,8 @@ import { Environment } from "../Symbol/Environment";
 import { env } from "process";
 import {Error_} from "../Error"
 import {errores} from "../Errores"
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 export enum ArithmeticOption{
     PLUS,
@@ -117,6 +119,113 @@ export class Arithmetic extends Expression{
             }             
         }
         return result;
+    }
+    public getDot(ant:string){
+
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=Aritmetic]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+          
+
+        
+
+        if(this.type == ArithmeticOption.PLUS){
+            dot+= this.left.getDot(nodo);
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \" + \"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            dot+= this.right.getDot(nodo);
+            return dot;
+                    
+                               
+        }
+        else if(this.type == ArithmeticOption.MINUS){
+
+            dot+= this.left.getDot(nodo);
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \" - \"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            dot+= this.right.getDot(nodo);
+            return dot;
+                  
+        }
+        else if(this.type == ArithmeticOption.TIMES){
+
+            dot+= this.left.getDot(nodo);
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \" * \"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            dot+=this.right.getDot(nodo);
+            return dot;
+
+        }
+        else if(this.type == ArithmeticOption.DIV){
+
+            dot+= this.left.getDot(nodo);
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \" / \"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            dot+= this.right.getDot(nodo);
+            return dot;
+           
+        }
+        else if(this.type == ArithmeticOption.NEGATIVE){
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \" - \"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+            dot+=this.left.getDot(nodo);
+            return dot;
+
+            
+
+           
+            
+        }
+        else if(this.type == ArithmeticOption.POT){
+            
+            dot+= this.left.getDot(nodo);
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \" ** \"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            dot+= this.right.getDot(nodo);
+            return dot;
+            
+        }
+        else if(this.type == ArithmeticOption.MOD){
+
+            
+            dot+= this.left.getDot(nodo);
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \" % \"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            dot+= this.right.getDot(nodo);
+            return dot;
+                      
+        }
+
+
+
     }
 }
 

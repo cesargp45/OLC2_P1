@@ -5,6 +5,8 @@ import { Error_ } from "../Error";
 import { errores } from "../Errores";
 import { Retorno, Type } from "../Abstract/Retorno";
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 export class Call extends Instruction {
 
@@ -297,9 +299,36 @@ export class Call extends Instruction {
 
     }
 
+    public getDot(ant:string){
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=Call]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \"(\"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \""+this.id+"\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \")\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+            return dot;
+    }
+
 
 
 }
+
+
 
 function getTipo(no: number): Type {
 

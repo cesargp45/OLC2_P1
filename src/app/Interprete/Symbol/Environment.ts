@@ -133,7 +133,7 @@ export class Environment{
                 //console.log(clave + " = " + valor.valor +"\n");
                 if(this.anterior == null){
                  let simboloN = new Simbolo(clave, valor.tipoVar, "Global", valor.valor,this.getType(valor.type));
-                 simbolog.push(simboloN); 
+                 simboloGlobal.push(simboloN); 
                 }else{
                     let simboloN = new Simbolo(clave, valor.tipoVar, "Local", valor.valor,this.getType(valor.type));
                     simboloGlobal.push(simboloN); 

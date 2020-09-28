@@ -65,6 +65,8 @@ export class AsignationArray2 extends Instruction{
 
     }
 
+    public getDot(ant:string){}
+
 
 
 }

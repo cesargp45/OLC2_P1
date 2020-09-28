@@ -235,4 +235,6 @@ export class DeclarationArray extends Instruction{
         
     }
 
+    public getDot(ant:string){}
+
 }

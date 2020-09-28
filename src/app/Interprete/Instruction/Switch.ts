@@ -7,6 +7,9 @@ import {errores} from "../Errores";
 import {Case} from "./Case";
 import { Condition } from '../Expression/Condition';
 
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
+
 
 export class Switch extends Instruction{
 
@@ -72,6 +75,40 @@ export class Switch extends Instruction{
 
         }
         
+ }
+
+ public getDot(ant:string){
+
+    let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=Literal]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= switch]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \":\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+            dot+= this.condition.getDot(nodo);
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \"cases\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+        
+            for (const iterator of this.cases) {
+                  dot+= iterator.getDot(nodo3);
+            }
+            
+
+
+
+            return dot;
  }
 
 }

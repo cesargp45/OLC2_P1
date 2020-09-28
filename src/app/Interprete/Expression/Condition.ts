@@ -3,6 +3,8 @@ import { Retorno, Type } from "../Abstract/Retorno";
 import { Environment } from "../Symbol/Environment";
 import {Error_} from "../Error";
 import {errores} from "../Errores";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 
 
@@ -39,5 +41,31 @@ export class Condition extends Expression{
             
                
         
+    }
+
+    public getDot(ant:string){
+
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=condition]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+            dot+= this.condicion.getDot(nodo);
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \"?\"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+            
+            dot+= this.exp1.getDot(nodo);
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \":\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+             
+            dot+= this.exp2.getDot(nodo);
+
+            return dot;
     }
 }

@@ -39,5 +39,7 @@ export class Statement extends Instruction{
         
     }
 
+    public getDot(ant:string){}
+
    
 }

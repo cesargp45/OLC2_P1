@@ -55,4 +55,6 @@ export class Prueba extends Instruction{
 
     }
 
+    public getDot(ant:string){}
+
 }

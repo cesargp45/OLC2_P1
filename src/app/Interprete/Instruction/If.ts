@@ -4,6 +4,8 @@ import { Environment } from "../Symbol/Environment";
 import { Type } from "../Abstract/Retorno";
 import {Error_} from "../Error";
 import {errores} from "../Errores";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 
 export class If extends Instruction{
@@ -32,6 +34,50 @@ export class If extends Instruction{
             }
             
         }
+    }
+
+    public getDot(ant:string){
+
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=instruccion]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+
+            let nodo1= "Node"+cont;
+            dot+=nodo1+"[label= \"if\"]; \n";
+            dot+= nodo+"->"+nodo1+'\n';
+            Aumentar();
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= \"(\"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+             dot+= this.condition.getDot(nodo);
+            let nodo3= "Node"+cont;
+            dot+=nodo1+"[label= \")\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+
+            let nodo4= "Node"+cont;
+            dot+=nodo4+"[label= \"statement\"]; \n";
+            dot+= nodo+"->"+nodo4+'\n';
+            Aumentar();
+
+            dot+= this.code.getDot(nodo4);
+           
+            if(this.elsSt != null){
+                
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label= \"else\"]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+
+                dot+= this.elsSt.getDot(nodo);
+            }
+
+
+            return dot;
     }
 }
 

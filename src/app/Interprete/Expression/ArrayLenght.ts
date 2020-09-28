@@ -23,4 +23,6 @@ export class ArrayLenght extends Instruction{
 
          return{value:tam.value, type: tam.type};
   }
+
+  public getDot(ant:string){}
 }

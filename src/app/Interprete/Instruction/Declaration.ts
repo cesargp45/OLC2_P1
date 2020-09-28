@@ -6,6 +6,8 @@ import { env } from "process";
 import {Error_} from "../Error";
 import {errores} from "../Errores";
 import {tiposArr} from "../TiposArr";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 export class Declaration extends Instruction{
     public idt: string;
@@ -186,5 +188,107 @@ export class Declaration extends Instruction{
         // environment.imprimirLista();
          return {value : this.id}; 
     }
+
+         public getDot(ant:string){
+             let dot = "";
+             let nodo= "Node"+cont;
+             dot+=nodo+"[label=Declaracion]; \n";
+             dot+= ant+"->"+nodo+'\n';
+             Aumentar();
+
+             if(this.tipoAsig == 1){
+                let nodoconst= "Node"+cont;
+                dot+=nodoconst+"[label=const]; \n";
+                dot+= nodo+"->"+nodoconst+'\n';
+                Aumentar();
+             }else{
+                let nodoconst= "Node"+cont;
+                dot+=nodoconst+"[label=let]; \n";
+                dot+= nodo+"->"+nodoconst+'\n';
+                Aumentar();
+             }
+            
+             if (this.tipo == null && this.value == null){  // let id;
+                let nodoconst= "Node"+cont;
+                dot+=nodoconst+"[label="+this.id+"]; \n";
+                dot+= nodo+"->"+nodoconst+'\n';
+                Aumentar();
+                return dot;
+             }else if(this.tipo == null && this.value != null){ //let id = exp; / const
+                let nodoconst= "Node"+cont;
+                dot+=nodoconst+"[label="+this.id+"]; \n";
+                dot+= nodo+"->"+nodoconst+'\n';
+                Aumentar();
+
+                let nodoconst2= "Node"+cont;
+                dot+=nodoconst2+"[label=\"=\"]; \n";
+                dot+= nodo+"->"+nodoconst2+'\n';
+                Aumentar();
+
+                let nodoconst3= "Node"+cont;
+                dot+=nodoconst3+"[label= Exp]; \n";
+                dot+= nodo+"->"+nodoconst3+'\n';
+                Aumentar();
+                
+                 dot+= this.value.getDot(nodoconst3);
+                return dot;
+             }else if(this.value == null && this.tipo != null){// let id:tipo;
+                let nodoconst= "Node"+cont;
+                dot+=nodoconst+"[label="+this.id+"]; \n";
+                dot+= nodo+"->"+nodoconst+'\n';
+                Aumentar();
+
+                let nodoconst2= "Node"+cont;
+                dot+=nodoconst2+"[label="+this.getType(this.tipo)+"]; \n";
+                dot+= nodo+"->"+nodoconst2+'\n';
+                Aumentar();
+
+                return dot;
+             }else if (this.value != null && this.tipo != null){ //let id:tipo = exp; /const
+
+                let nodoconst= "Node"+cont;
+                dot+=nodoconst+"[label="+this.id+"]; \n";
+                dot+= nodo+"->"+nodoconst+'\n';
+                Aumentar();
+
+                let nodoconst4= "Node"+cont;
+                dot+=nodoconst4+"[label="+this.getType(this.tipo)+"]; \n";
+                dot+= nodo+"->"+nodoconst4+'\n';
+                Aumentar();
+
+                let nodoconst2= "Node"+cont;
+                dot+=nodoconst2+"[label=\"=\"]; \n";
+                dot+=nodo+"->"+nodoconst2+'\n';
+                Aumentar();
+
+                let nodoconst3= "Node"+cont;
+                dot+=nodoconst3+"[label= Exp]; \n";
+                dot+= nodo+"->"+nodoconst3+'\n';
+                Aumentar();
+
+                dot+= this.value.getDot(nodoconst3);
+                
+                return dot;
+             }
+         }
+
+
+         getType(val:any){
+            if(val == Type.NUMBER){
+               return "number";
+            }else if(val == Type.BOOLEAN){
+                return "boolean";
+            }else if(val == Type.STRING){
+                return "string";
+            }else if(val == Type.ANY){
+                return "any";
+            }else if(val == Type.VOID){
+                return "void";
+            }else if(val == Type.ARRAY){
+                return "array";
+            }
+            return "any";
+    
+        }
 
 }

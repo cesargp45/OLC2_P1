@@ -7,6 +7,8 @@ import {Error_} from "../Error";
 import {errores} from "../Errores";
 import {tiposArr} from "../TiposArr";
 import { Arreglo } from "../Objects/Array";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
 
 export class DeclarationArray2 extends Instruction{
 
@@ -157,6 +159,108 @@ export class DeclarationArray2 extends Instruction{
          }
        
         
+    }
+    public getDot(ant:string){
+
+        let dot = "";
+        let nodo= "Node"+cont;
+        dot+=nodo+"[label=declaration]; \n";
+        dot+= ant+"->"+nodo+'\n';
+        Aumentar();
+
+            
+
+        if(this.value == null && this.tipo != null){// let id:tipo[];/let id:tipo[] = [];
+              if(this.tipoAsig == 1){
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label= const]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+              }else{
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label= let]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+              }
+
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= "+this.id+"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \":\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+  
+            let nodo4= "Node"+cont;
+            dot+=nodo4+"[label="+this.getType(this.tipo)+"]; \n";
+            dot+= nodo+"->"+nodo4+'\n';
+            Aumentar();
+ 
+           
+            return dot;
+
+        }else if (this.value != null && this.tipo != null){ //let id:tipo = [lista]; /const
+            if(this.tipoAsig == 1){
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label= const]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+              }else{
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label= let]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+              }
+
+
+            let nodo2= "Node"+cont;
+            dot+=nodo2+"[label= "+this.id+"]; \n";
+            dot+= nodo+"->"+nodo2+'\n';
+            Aumentar();
+
+            let nodo3= "Node"+cont;
+            dot+=nodo3+"[label= \":\"]; \n";
+            dot+= nodo+"->"+nodo3+'\n';
+            Aumentar();
+  
+            let nodo4= "Node"+cont;
+            dot+=nodo4+"[label="+this.getType(this.tipo)+"]; \n";
+            dot+= nodo+"->"+nodo4+'\n';
+            Aumentar();
+
+            let nodo5= "Node"+cont;
+            dot+=nodo5+"[label=\"=\"]; \n";
+            dot+= nodo+"->"+nodo5+'\n';
+            Aumentar();
+            
+            dot+= this.value.getDot(nodo);
+           
+            return dot;
+               
+                
+        }
+    }
+
+
+    getType(val:any){
+        if(val == Type.NUMBER){
+           return "number";
+        }else if(val == Type.BOOLEAN){
+            return "boolean";
+        }else if(val == Type.STRING){
+            return "string";
+        }else if(val == Type.ANY){
+            return "any";
+        }else if(val == Type.VOID){
+            return "void";
+        }else if(val == Type.ARRAY){
+            return "array";
+        }
+        return "any";
+
     }
 
 }

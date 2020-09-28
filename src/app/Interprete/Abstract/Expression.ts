@@ -13,10 +13,13 @@ export abstract class Expression {
     }
 
     public abstract execute(environment: Environment) : Retorno;
+    public abstract getDot(ant:string) : any;
 
     public tipoDominante(tipo1 : Type, tipo2 : Type) : Type{
         const type = tipos[tipo1][tipo2];
         return type;
     }
+
+    
 
 }

@@ -41,7 +41,7 @@ export class Literal extends Expression{
         Aumentar();
 
             let nodo1= "Node"+cont;
-            dot+=nodo1+"[label= "+this.value+"]; \n";
+            dot+=nodo1+"[label= \""+this.value+"\"]; \n";
             dot+= nodo+"->"+nodo1+'\n';
             Aumentar();
             return dot;

@@ -54,6 +54,7 @@ export class Print extends Instruction{
             Aumentar();
 
             dot+= this.value.getDot(nodo);
+            
             return dot;
 
     }

@@ -39,7 +39,20 @@ export class Statement extends Instruction{
         
     }
 
-    public getDot(ant:string){}
+    public getDot(ant:string){
+
+        let dot = "";
+
+        for(const instr of this.code){
+            try {
+                dot+= instr.getDot(ant);
+                
+            } catch (error) {
+                errores.push(error);
+            }
+        }
+        return dot;
+    }
 
    
 }

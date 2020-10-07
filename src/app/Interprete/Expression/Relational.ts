@@ -70,7 +70,7 @@ export class Relational extends Expression{
             dot+= nodo+"->"+nodo1+'\n';
             Aumentar();
             dot+= this.right.getDot(nodo);
-            return dot;;
+            return dot;
         }else if(this.type == RelationalOption.LESS){
             dot+=this.left.getDot(nodo);
             let nodo1= "Node"+cont;

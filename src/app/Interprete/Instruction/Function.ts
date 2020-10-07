@@ -4,6 +4,9 @@ import { Environment } from "../Symbol/Environment";
 import {Error_} from "../Error";
 import {errores} from "../Errores";
 import { Retorno, Type } from "../Abstract/Retorno";
+import { cont } from "../contador";
+import { Aumentar} from "../contador";
+
 
 export class Function extends Instruction{
 
@@ -61,51 +64,94 @@ export class Function extends Instruction{
        
     }
 
-    public getDot(ant:string){}
-}
+    public getDot(ant:string){
 
 
-
-
-
-/*
-    Lenguaje Entrada -> Traducis -> Lenguaje Salida;
-    Lenguaje Salida -> Intepretas -> Salida en consola | Reportes | TS;
-*/
-
-function getTipo(no:number):Type {
+        let dot = "";
+            let nodo= "Node"+cont;
+            dot+=nodo+"[label=Funcion]; \n";
+            dot+= ant+"->"+nodo+'\n';
+            Aumentar();
     
-    if(no == 0){
-        return Type.NUMBER;
-    }
-     else if(no  == 1){
-        return Type.STRING;
-     }
-     else if(no  == 2){
-       return Type.BOOLEAN;
-     }
-     else if(no  == 3){
-        
-         let errorN = new Error_(this.line,this.column,"Semantico","El tipo no puede ser null");
-         errores.push(errorN);  
-        throw {error: "Semantico: el tipo no puede ser nulo", linea: this.line, columna : this.column};
-     }
-     else if(no  == 4){
-        let errorN = new Error_(this.line,this.column,"Semantico","El tipo no puede ser array");
-        errores.push(errorN);  
-       throw {error: "Semantico: el tipo no puede ser array", linea: this.line, columna : this.column};
-     }
-     else if(no  == 5){
-        let errorN = new Error_(this.line,this.column,"Semantico","El tipo no puede ser void");
-         errores.push(errorN);  
-        throw {error: "Semantico: el tipo no puede ser void", linea: this.line, columna : this.column};
-    }
-    else if(no  == 6){
-        let errorN = new Error_(this.line,this.column,"Semantico","El tipo no puede ser any");
-         errores.push(errorN);  
-        throw {error: "Semantico: el tipo no puede ser any", linea: this.line, columna : this.column};
-        
+                let nodo1= "Node"+cont;
+                dot+=nodo1+"[label = "+this.id+"]; \n";
+                dot+= nodo+"->"+nodo1+'\n';
+                Aumentar();
+
+                       
+                
+
+                if(this.parametros != null ){
+
+                        let nodo3= "Node"+cont;
+                        dot+=nodo3+"[label = parametros]; \n";
+                        dot+= nodo+"->"+nodo3+'\n';
+                        Aumentar();
+                        
+                    for(let i = 1; i < this.parametros.length; i = i+2){
+
+                        let nodo2= "Node"+cont;
+                        dot+=nodo2+"[label = "+this.parametros[i]+"]; \n";
+                        dot+= nodo3+"->"+nodo2+'\n';
+                        Aumentar();
+                        
+                    }
+
+
+                }
+
+
+
+                if(this.tipo != null){
+                        let nodo4= "Node"+cont;
+                        dot+=nodo4+"[label = \"" +this.getType(this.tipo)+"\"]; \n";
+                        dot+= nodo+"->"+nodo4+'\n';
+                        Aumentar();
+                }
+
+                      
+                        let nodo5= "Node"+cont;
+                        dot+=nodo5+"[label = \"statement\"]; \n";
+                        dot+= nodo+"->"+nodo5+'\n';
+                        Aumentar();
+
+
+                        for(const instr of this.instrucciones){
+                            try {
+                                dot+= instr.getDot(nodo5);
+                                               
+                            } catch (error) {
+                                errores.push(error);
+                            }
+                        }
+                         
+                         return dot;
     }
 
-   
+
+
+
+    getType(val:any){
+        if(val == Type.NUMBER){
+           return "number";
+        }else if(val == Type.BOOLEAN){
+            return "boolean";
+        }else if(val == Type.STRING){
+            return "string";
+        }else if(val == Type.ANY){
+            return "any";
+        }else if(val == Type.VOID){
+            return "void";
+        }else if(val == Type.ARRAY){
+            return "array";
+        }
+        return "any";
+
+    }
 }
+
+
+
+
+
+

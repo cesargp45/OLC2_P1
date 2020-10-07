@@ -53,14 +53,16 @@ export class If extends Instruction{
             dot+=nodo2+"[label= \"(\"]; \n";
             dot+= nodo+"->"+nodo2+'\n';
             Aumentar();
+
              dot+= this.condition.getDot(nodo);
+
             let nodo3= "Node"+cont;
-            dot+=nodo1+"[label= \")\"]; \n";
+            dot+=nodo3+"[label= \")\"]; \n";
             dot+= nodo+"->"+nodo3+'\n';
             Aumentar();
 
-            let nodo4= "Node"+cont;
-            dot+=nodo4+"[label= \"statement\"]; \n";
+            let nodo4 = "Node"+cont;
+            dot+= nodo4+"[label= \"statement\"]; \n";
             dot+= nodo+"->"+nodo4+'\n';
             Aumentar();
 
@@ -81,9 +83,3 @@ export class If extends Instruction{
     }
 }
 
-
-
-/*
-    PADRE <- HIJO <- IF
-    PADRE <- HIJO <- WHILE
-*/

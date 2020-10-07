@@ -62,6 +62,7 @@ export class Access extends Expression{
                 dot+= nodo+"->"+nodo1+'\n';
                 Aumentar();
                 return dot;
+                
         }else if(this.tipo == 2){
           
             let dot = "";

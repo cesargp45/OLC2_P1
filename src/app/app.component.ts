@@ -1,4 +1,6 @@
 import { Component,Input,OnInit  } from '@angular/core';
+import { graphviz }  from 'd3-graphviz';
+import { wasmFolder } from "@hpcc-js/wasm";
 import { CodeModel } from '@ngstack/code-editor/lib/models/code.model';
 import { Instruction } from "./Interprete/Abstract/Instruction";
 import { Environment } from "./Interprete/Symbol/Environment";
@@ -9,6 +11,7 @@ import { Declaration } from "./Interprete/Instruction/Declaration";
 import { DeclarationArray2 } from "./Interprete/Instruction/DeclarationArray2";
  import {resultado} from "./Interprete/traduc"
 import Parser from "./Grammar/Grammar.js";
+import Parser2 from "./Grammar/Grammar2.js";
 import { Break } from './Interprete/Instruction/Break';
 import { Simbolo } from "./Interprete/simbolo";
 import { simbolog } from "./Interprete/simboloG";
@@ -30,7 +33,9 @@ export class AppComponent implements OnInit  {
   textoConsola1: string = "";
   textoConsola2: string = "";
   ngOnInit() {
-    //var tradut = textoTraducido;
+    
+    wasmFolder('/assets/@hpcc-js/wasm/dist/');
+   
     
   }
 
@@ -64,14 +69,35 @@ export class AppComponent implements OnInit  {
   }
   
 
+  public generarAST1(dot:string):void{
+    graphviz('p').renderDot("digraph{a -> b}");
 
+  }
+  public generarAST(dot:string):void{
+    graphviz('p').renderDot(dot);
 
+  }
 
+  public desanidar():void{  
+    this.limpiar();
+    if(this.textoConsola2 == null ||this.textoConsola2 == ""||this.textoConsola2 == undefined ){
+          alert("No hay nada para traducir");
+    }else{
+      (document.getElementById("T") as HTMLInputElement).value= "";
+      const traducido = Parser2.parse(this.textoConsola2);
+      (document.getElementById("T") as HTMLInputElement).value= traducido;
+      //console.log("desanidado: \n"+ traducido);
+      this.er = errores;
+
+    }
+   
+}
 
 
   public generarDot():void{
        try{
-       Reiniciar();
+      this.limpiar();
+      Reiniciar();
       let dot:string = "digraph G { \n";
       let nodo= " Node"+cont;
       dot+=nodo+"[label=Global]; \n";
@@ -100,14 +126,15 @@ export class AppComponent implements OnInit  {
     dot+='}';
 
      console.log(dot);
+     (document.getElementById("C") as HTMLInputElement).value=dot;
+     this.generarAST(dot);
    }
+
+   this.er = errores;
    }catch(error){
 
    }
   }
-
-
-
 
 
  public ejecutar():void{
@@ -257,10 +284,162 @@ export class AppComponent implements OnInit  {
   }
   
 
-    imprimir(){    
-      alert(this.textoConsola1);       
-    }
+ public obtener(){
+   var hola = (document.getElementById("T") as HTMLInputElement).value;
+   if(hola == "" || hola == null){
+      alert("nada para ejecutar");
+   }else{
+     this.ejecutar2();
+   }
+ }
 
+  public ejecutar2():void{
+    this.limpiar();
+    
+    
+   try {
+     const ast = Parser.parse((document.getElementById("T") as HTMLInputElement).value);
+     const env = new Environment(null);
+     
+     if(ast[0]!= null){
+
+       
+
+        // primera pasada types
+
+
+
+       // segunda pasada funciones
+
+       for (const instr of ast) {
+         try {
+           if (instr instanceof Function) {
+             //const instruccionE = instr.execute(env);
+             const actual = instr.execute(env);
+
+           } 
+         } catch (error) {
+           //ErrorTable.push(error);
+            console.log(error);
+         }
+       }
+
+      // tercera pada variables globales 
+
+
+      for (const instr of ast) {
+       try {
+         if (instr instanceof Declaration || instr instanceof DeclarationArray2) {
+           //const instruccionE = instr.execute(env);
+           const actual = instr.execute(env);
+
+         } 
+       } catch (error) {
+         //ErrorTable.push(error);
+          console.log(error);
+       }
+     }
+
+
+
+
+
+
+ // cuarta pasada ejecuta el codigo 
+
+       for (const instr of ast) {
+         try {
+             if(instr instanceof Function || instr instanceof Declaration || instr instanceof DeclarationArray2){
+
+             }else{
+
+               if (instr instanceof Instruction) {
+                 
+                 const actual = instr.execute(env);
+                 if(actual != null || actual != undefined){
+                     
+                     if(actual.type == 'Break'){
+                      
+                       let errorN = new Error_(actual.line,actual.column,"Semantico","Break fuera de ciclo");
+                       errores.push(errorN);         
+                       throw {error: "Semantico: Break fuera de ciclo", linea: actual.line, columna : actual.column};
+                     }else if(actual.type == 'Continue'){
+                      
+                       let errorN = new Error_(actual.line,actual.column,"Semantico","Continue fuera de ciclo");
+                       errores.push(errorN);         
+                       throw {error: "Semantico: Continue fuera de ciclo", linea: actual.line, columna : actual.column};
+                     }else if(actual.type == 'Return'){
+                      
+                       let errorN = new Error_(actual.line,actual.column,"Semantico","Return fuera de funcion");
+                       errores.push(errorN);         
+                       throw {error: "Semantico: Return fuera de funcion", linea: actual.line, columna : actual.column};
+                     }
+                      
+                                        
+                   }
+               
+               } else if (Array.isArray(instr)) {
+                 for (const arr of instr) {
+                   try {
+                     console.log("pasa por el arreglo");
+                     arr.execute(env);
+                   } catch (error) {
+                     // ErrorTable.push(error);
+                     console.log(error);
+                   }
+                 }
+               }
+
+             }
+           
+         } catch (error) {
+           //ErrorTable.push(error);
+            console.log(error);
+         }
+       }
+
+        env.imprimirLista();
+        
+       // imprimir la salida del codigo
+        let salida ="";
+       for (const it of resultado) {
+            salida += it+'\n';
+       }
+
+        this.imprimirResult(salida);
+      // terminasalida del codigo
+
+
+       // imprimir errore
+      console.log("lista de errores :");
+      for (const it of errores) {
+           console.log(it);
+      }
+      console.log("----------------");
+
+      this.er = errores;
+      this.graphi = simbolog;
+      
+       env.guardarSimGlobal();
+       env.guardarFunGlobal();
+       this.simglobal = simboloGlobal;
+
+     } else{
+       alert("No hay nada para analizar");
+     }
+
+     
+    
+ }
+ catch (error) {
+   console.log(error);
+ }
+ 
+  console.log(errores);
+
+ }
+
+  
     imprimirResult(valor:any){
       (document.getElementById("C") as HTMLInputElement).value=valor;
     }
@@ -277,7 +456,11 @@ export class AppComponent implements OnInit  {
         
       while(simbolog.length > 0){
         simbolog.pop();   
-     }
+      }
+
+      while(simboloGlobal.length > 0){
+        simboloGlobal.pop();   
+      }
 
     }
 
